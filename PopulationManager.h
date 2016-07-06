@@ -50,7 +50,7 @@ public:
 	/** If a fight should be triggered?! Note that this function is intended to be called ONCE each time upon reaching a tile!
 		Returns reference to battle or an empty string if no battle is to be initiated.
 	*/
-	String ShouldFight(Vector3f playerPosition);
+	String ShouldFight(ConstVec3fr playerPosition);
 	
 	/// When entering it.
 	int initialAmount;

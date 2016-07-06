@@ -6,11 +6,14 @@
 
 // Registers all states that will be used to the state manager upon startup
 void RegisterStates(){
-	StateMan.RegisterState(new RuneGlobalState());
-	StateMan.RegisterState(new MainMenu());
-	StateMan.RegisterState(new RuneBattleState());
-	StateMan.RegisterState(new MapState());
-	StateMan.RegisterState(new RuneEditor());
-	StateMan.RegisterState(new RuneState());
-	StateMan.RegisterState(new CutsceneState());
+	RRGameState * rrState = new RRGameState();
+	StateMan.RegisterState(rrState);
+	StateMan.QueueState(rrState);
+	//StateMan.RegisterState(new RuneGlobalState());
+	//StateMan.RegisterState(new MainMenu());
+	//StateMan.RegisterState(new RuneBattleState());
+	//StateMan.RegisterState(new MapState());
+	//StateMan.RegisterState(new RuneEditor());
+	//StateMan.RegisterState(new RuneState());
+	//StateMan.RegisterState(new CutsceneState());
 };

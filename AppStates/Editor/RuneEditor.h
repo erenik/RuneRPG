@@ -1,6 +1,9 @@
 // Emil Hedemalm
 // 2013-06-28
 
+#ifndef RUNE_EDITOR_H
+#define RUNE_EDITOR_H
+
 #include "AppStates/AppState.h"
 #include "AppStates/AppStates.h"
 #include "Entity/Entities.h"
@@ -196,3 +199,5 @@ private:
 	};
 	int mouseCameraState;
 };
+
+#endif

@@ -14,7 +14,7 @@ RRPlayer::RRPlayer(String name)
 	battler.isAI = false;
 	battler.name = name;
 	/// Always have attack available..
-	battler.actionNames.Add("Attack");
+	battler.actionNames.AddItem("Attack");
 	isReady = false;
 }
 

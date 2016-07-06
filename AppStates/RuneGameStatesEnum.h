@@ -5,7 +5,7 @@
 #ifndef RUNE_GAME_STATE_ENUM
 #define RUNE_GAME_STATE_ENUM 
 
-#include "AppStates/AppStates.h"
+// #include "AppStates/AppStates.h"
 
 /// Why am I using this enum........... I dont even.
 enum RuneGameStatesEnum {

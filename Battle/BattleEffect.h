@@ -6,7 +6,7 @@
 #define BATTLE_EFFECT_H
 
 #include "String/AEString.h"
-#include "RuneRPG/RuneRPG.h"
+#include "RuneRPG.h"
 
 class RBattleState;
 class RuneBattler;

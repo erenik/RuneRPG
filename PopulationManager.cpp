@@ -137,7 +137,7 @@ bool Population::LoadFrom(String file)
 	return true;
 }
 
-String Population::ShouldFight(Vector3f playerPosition)
+String Population::ShouldFight(ConstVec3fr playerPosition)
 {
 	float encounterRatio = GetEncounterRatio(playerPosition);
 	if (encounterRatio <= 0)

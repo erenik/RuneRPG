@@ -9,16 +9,26 @@
 #define RR_GAMESTATE_H
 
 #include "AppStates/AppState.h"
-#include "RuneRPG/Network/RRSession.h"
-#include "RuneRPG/AppStates/RuneGameStatesEnum.h"
+#include "Network/RRSession.h"
+#include "AppStates/RuneGameStatesEnum.h"
 
 class RREntityState;
 
 #define DEFAULT_NAME "No-name"
 
-class RRGameState : public AppState {
+class RRGameState : public AppState 
+{
 public:
 	RRGameState();
+
+	/// Function when entering this state, providing a pointer to the previous StateMan.
+	virtual void OnEnter(AppState * previousState);
+	/// Main processing function, using provided time since last frame.
+	virtual void Process(int timeInMs);
+	/// Function when leaving this state, providing a pointer to the next StateMan.
+	virtual void OnExit(AppState * nextState);
+	/// yea.
+	virtual void ProcessMessage(Message * message);
 
 	/// Hosts a game
 	bool Host(int port = RR_DEFAULT_PORT);

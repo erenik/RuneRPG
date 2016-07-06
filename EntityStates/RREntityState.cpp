@@ -135,7 +135,7 @@ void RREntityState::EnableMovement()
 Vector2i RREntityState::GetInteractionTile()
 {		
 	// Check if tile is vacant and walkable, if so move to it.
-	Vector3f pos = owner->position;
+	Vector3f pos = owner->worldPosition;
 	pos.Round();
 	int tileX = pos.x;
 	int tileY = pos.y;
@@ -203,7 +203,7 @@ void RREntityState::HandleMovement(int timePassedInMs)
 			previousDirection = direction;
 			direction = Direction::NONE;
 			TileMap2D * map = (TileMap2D*)MapMan.ActiveMap();
-			Vector3f pos = owner->position;
+			Vector3f pos = owner->worldPosition;
 			pos.Round();
 			assert(false);
 		//	map->OnArrive(entity, pos.x, pos.y);
@@ -224,7 +224,7 @@ void RREntityState::HandleMovement(int timePassedInMs)
 	/// If we reached next tile, see if we got a queued direction and occupy that next tile if possible and if so! :)
 	if (direction == Direction::NONE && queuedDirection != Direction::NONE){
 		// Check if tile is vacant and walkable, if so move to it.
-		Vector3f pos = owner->position;
+		Vector3f pos = owner->worldPosition;
 //		std::cout<<"\nPosition: "<<pos;
 
 		TileMap2D * map = (TileMap2D*)MapMan.ActiveMap();

@@ -9,7 +9,7 @@
 #include "RuneBattle.h"
 #include "BattleEffect.h"
 #include "MathLib/Variable.h"
-#include "RuneRPG/Item/RuneItem.h"
+#include "Item/RuneItem.h"
 
 class Entity;
 class RuneBattleAction;

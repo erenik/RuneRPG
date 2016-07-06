@@ -7,7 +7,7 @@
 
 #include "String/AEString.h"
 #include "MathLib.h"
-#include "RuneRPG/Battle/BattleEffect.h"
+#include "Battle/BattleEffect.h"
 
 
 namespace Slot 

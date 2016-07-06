@@ -21,14 +21,14 @@
 #include "Physics/PhysicsManager.h"
 #include "Physics/Messages/PhysicsMessage.h"
 
-#include "ModelManager.h"
+#include "Model/ModelManager.h"
 #include "TextureManager.h"
 
 #include "Random/Random.h"
 
 #include "MathLib/Function.h"
 #include "BattleStats.h"
-#include "RuneRPG/Item/ItemTypes.h"
+#include "Item/ItemTypes.h"
 
 RuneBattler::RuneBattler()
 {
@@ -594,8 +594,9 @@ void RuneBattler::UpdateActionCategories(int usingSortingScheme)
 				* mundaneActions = new RuneBattleActionCategory("Mundane Actions"),
 				* items = new RuneBattleActionCategory("Items"),
 				* flee = new RuneBattleActionCategory("Flee");
-			actionCategories.Add(6, attack, spells, skills, 
-				mundaneActions, items, flee);
+			actionCategories.Add(attack, spells, skills, 
+				mundaneActions, items);
+			actionCategories.AddItem(flee);
 			for (int i = 0; i < actions.Size(); ++i)
 			{
 				RuneBattleAction * rba = actions[i];

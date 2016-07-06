@@ -15,9 +15,10 @@
 #include "UI/UIQueryDialogue.h"
 #include "System/PreferencesManager.h"
 #include "Chat/ChatManager.h"
-#include "UI/UIList.h"
+#include "UI/UILists.h"
 #include "Script/ScriptManager.h"
 #include "Audio/TrackManager.h"
+#include "Input/Action.h"
 
 extern UserInterface * ui[GameStateID::MAX_GAME_STATES];
 
@@ -57,7 +58,7 @@ void CutsceneState::OnEnter(AppState * previousState)
 	Graphics.QueueMessage(new GMSetUIs("ActivePlayerInput", GMUI::TEXT, "Keyboard 1"));
 
 	/// Notify that input-manager to use menu-navigation.
-	Input.ForceNavigateUI(true);
+	InputMan.ForceNavigateUI(true);
 	// Push the menu to be hovered on straight away, yo.
 	Graphics.QueueMessage(new GMPushUI("CutsceneState", ui));
 
@@ -144,7 +145,7 @@ void CutsceneState::CreateDefaultBindings(){
 	std::cout<<"\nCutsceneState::CreateDefaultBindings() called";
 	/// (int action, int * inputCombinationArray, int inputs, const char * name = NULL);
 	InputMapping * mapping = &this->inputMapping;
-	mapping->CreateBinding("PauseCutscene", KEY::ESCAPE);
+	mapping->bindings.AddItem(new Binding(Action::FromString("PauseCutscene"), KEY::ESCAPE));
 };
 
 /// Creates the user interface for this state

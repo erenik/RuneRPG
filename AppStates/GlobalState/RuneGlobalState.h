@@ -2,6 +2,9 @@
 // 2014-04-06
 // Global app/game-state for the RuneRPG game.
 
+#ifndef RUNE_GLOBAL_STATE_H
+#define RUNE_GLOBAL_STATE_H
+
 #include "../RRGameState.h"
 #include "Entity/Entities.h"
 
@@ -41,3 +44,5 @@ private:
 	int targetPort;
 	String targetIP;
 };
+
+#endif

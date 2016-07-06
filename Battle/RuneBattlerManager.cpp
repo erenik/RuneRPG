@@ -10,7 +10,7 @@
 
 #include "BattleStats.h"
 #include "String/StringUtil.h"
-#include "RuneRPG/Item/RuneItem.h"
+#include "Item/RuneItem.h"
 ;
 
 void AddActionToBattler(RuneBattler * battler, String actionName)

@@ -4,18 +4,18 @@
 #include "Actions.h"
 // Don't include all managers. Ever.
 #include "Network/NetworkManager.h"
-#include "RuneRPG/Battle/RuneBattlerManager.h"
+#include "Battle/RuneBattlerManager.h"
 #include "Input/InputManager.h"
 #include "Graphics/GraphicsManager.h"
 
 void RuneGlobalState::InputProcessor(int action, int inputDevice/* = 0*/){
 	/// Don't do some stuff if entering text man..
-	if (Input.IsInTextEnteringMode())
+	if (InputMan.IsInTextEnteringMode())
 		return;
 	switch(action)
 	{
 		case TOGGLE_MOUSE_LOCK:
-			Input.SetMouseLock(!Input.MouseLocked());
+			InputMan.SetMouseLock(!InputMan.MouseLocked());
 			break;
 		case RELOAD_BATTLERS: {
 			std::cout<<"\nReloading battlers...";

@@ -5,8 +5,8 @@
 #include "RuneItem.h"
 #include "ItemTypes.h"
 #include "File/File.h"
-#include "RuneRPG/Battle/TargetFilters.h"
-#include "RuneRPG/Battle/BattleStats.h"
+#include "Battle/TargetFilters.h"
+#include "Battle/BattleStats.h"
 
 List<RuneItem> RuneItem::allWeapons, RuneItem::allArmor, RuneItem::allConsumables, RuneItem::allKeyItems;
 
