@@ -5,46 +5,17 @@
 #ifndef ZONE_H
 #define ZONE_H
 
-enum 
-{
-	NOT_ADDED_YET,
-	WALKABLE,
-	UNWALKABLE,
-	ROAD,
-	ZONE,
-	WALL,
-	BUILDING,
-	SHALLOW_WATER,
-	WATER,
-	ENEMY_SPAWN_AREA,
-	BLACK_VOID,
-	HEALING_FOUNTAIN,
-	EVENT,
-	NPC, 
-	ZONE_INTO_BUILDING,
-	DOOR,
-};
-
-#include "Entity/EntityProperty.h"
-class RRTileProperty : public EntityProperty
-{
-public:
-	RRTileProperty(Entity * owner)
-		:EntityProperty("RRMapProp", ID(), owner)
-	{
-		healingFountain = false;
-	}
-	static int ID() { return 7;};
-	/// Used in all maps?
-	String zone; // If filled, zones to somewhere.
-	bool healingFountain;
-private:
-
-};
+#include "RRTileProperty.h"
 
 class Zone 
 {
 public:
+	Zone()
+	{
+		loading = false;
+	}
+	/// Evaluates text in a tile, what it shall signify.
+	void EvaluateText(String text, RTP * rtp);
 	/// Name of zone, default dir "data/Zones/*.html"
 	void SetupEditCamera();
 	/// Makes the zone active by default.
@@ -57,9 +28,18 @@ public:
 	void ProcessMessage(Message * message);
 
 	static Camera * editCamera;
+
+	Vector3f playerSpawnPos; // Pos to spawn after all tiles have been loaded.
+
+		/// Biome for the zone.
+	String biome;
+
 private:
+	/// While true, is loading - spawning - entities. This to reduce lag in window maneuverability. Spawns 10 tiles per frame until done.
+	bool loading;
+	int tilesLoaded; // Related to 'loading' above. from 0 to rtps.Size()
 	/// o-o
-	List<RRTileProperty*> zoneTiles;
+	List<RRTileProperty*> zoneTiles, rtps;
 };
 
 #endif

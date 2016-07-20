@@ -18,6 +18,7 @@
 #include "Graphics/Camera/CameraUtil.h"
 #include "Graphics/Camera/Camera.h"
 #include "Graphics/Messages/GMCamera.h"
+#include "Graphics/Messages/GMSetEntity.h"
 
 #include "File/FileUtil.h"
 #include "File/LogFile.h"
@@ -63,11 +64,30 @@ bool ZoneExists(String zone)
 	return FileExists("data/Zones/"+zone+".html");
 }
 
+void Zone::EvaluateText(String text, RTP * rtp)
+{
+	if (text == "Arrival")
+		rtp->arrival = true;
+	if (text == "e")
+		rtp->enemySpawnArea = true;
+	if (text.Contains("Biome:"))
+	{
+		biome = text.Tokenize(":")[1];
+		biome.RemoveSurroundingWhitespaces();
+	}
+	else 
+	{
+		std::cout<<"Text found: "+text;
+		rtp->text = text;
+	}
+}
+
 /// Name of zone, default dir "data/Zones/*.html"
 bool Zone::Load(String zone)
 {
 	if (previousZone != currentZone)
 		previousZone = currentZone;
+	rtps.Clear();
 	currentZone = zone;
 	zoneTiles.Clear();
 	styles.Clear();
@@ -107,7 +127,7 @@ bool Zone::Load(String zone)
 	std::cout<<"\n"<<styles.Size()<<" styles found";
 	/// Parse the table.
 	aabb = AABB();
-	List<RRTileProperty*> zoneCenters, zoneReceivers;
+	List<RRTileProperty*> zoneCenters, zoneReceivers; // Zone tiles
 	XMLElement * body = parser.GetElement("tbody"); // Body
 	for (int i = 0; i < body->children.Size(); ++i) // Rows
 	{
@@ -143,78 +163,62 @@ bool Zone::Load(String zone)
 					else if (s->hexColor == "#a4c2f4") type = NPC;
 					else if (s->hexColor == "#93c47d") type = HEALING_FOUNTAIN;
 					else if (s->hexColor == "#b4a7d6") type = EVENT;
-					else type = NOT_ADDED_YET;
+					else { type = NOT_ADDED_YET; LogMain("HexColor undocumented: "+s->hexColor, INFO); };
 				}
 			}	
 			Vector3f offset;
-			String texture = "0x77"; // White default?
 			bool walkable = true;
-			bool hasPhysics = true, hasGraphics = true;
 			switch(type)
 			{
-				case UNWALKABLE: walkable = false; offset.y += 0.5f; texture = "0xFF"; break;
-				case ENEMY_SPAWN_AREA: 
-				case WALKABLE: 
-				case NPC:
-				case EVENT:
-					texture = "0x007F00"; 
+				case UNWALKABLE: walkable = false; offset.y += 0.5f; 
 					break;
-				case ROAD: texture = "0xd9d9d9"; break;
-				case ZONE: texture = "0x447FAA"; break; // 0xE5E5FF
-				case NOT_ADDED_YET: texture = "0xAA88"; walkable = false; break;
-				case WALL: texture = "0x85200c"; walkable = false; break;
-				case BUILDING: texture = "0xb45f06"; walkable = false; break;
-				case SHALLOW_WATER: texture = "0xa2c4c9"; break;
-				case BLACK_VOID: texture = "0x00"; walkable = false; break;
-				case WATER: texture = "0x0000FF"; walkable = false; break;
-				case ZONE_INTO_BUILDING: texture = "0xFFAAAA"; walkable = false; break;
-
+				case NOT_ADDED_YET: 
+				case WALL:
+				case BUILDING:
+				case BLACK_VOID:
+				case WATER:
+				case ZONE_INTO_BUILDING:
+					walkable = false; break;
 			}
 			// Do different stuff depending on the style?
 			/// Skip walkables for now? Add 'em later when we know where we need 'em?
-			if (type == WALKABLE)
-				continue;
-			Vector3f pos = Vector3f((float)j, 0, (float)i) + offset;
-			Entity * entity = EntityMan.CreateEntity("ij", ModelMan.GetModel((walkable? "plane" : "cube")), TexMan.GetTexture(texture));
-			entity->SetPosition(pos);
-			MapMan.AddEntity(entity, hasGraphics, hasPhysics);
-			QueuePhysics(new PMSetEntity(entity, PT_PHYSICS_SHAPE, ShapeType::MESH));
-			RRTileProperty * rtp = 0;
-			switch(type)
+			/// - Just don't create entities to represent them then. Or create appropriate borders with other tiles just.
+//			if (type == WALKABLE)
+	//			continue;
+			RRTileProperty * rtp = new RRTileProperty(0);
+			rtp->position = Vector3f((float)j, 0, (float)i) + offset;
+			rtp->walkable = walkable;
+			rtp->type = type;
+			aabb.Expand(rtp->position);
+			rtps.AddItem(rtp);
+
+			if (xe->children.Size())
 			{
-				case ZONE:
-				case HEALING_FOUNTAIN:
-					QueuePhysics(new PMSetEntity(entity, PT_COLLISION_CALLBACK, true));
-					rtp = new RRTileProperty(entity);
-					entity->properties.AddItem(rtp);
-					break;
-			}
-			if (rtp)
-			{
-				if (type == ZONE)
+				XMLElement * div = xe->GetElement("div");
+				if (div)
 				{
-					zoneTiles.AddItem(rtp);
-					// Look for the target zone within, if possible.
-					if (xe->children.Size())
-					{
-						XMLElement * div = xe->children[0]; // div
-						rtp->zone = div->data;
-					}
-					if (rtp->zone.Length() < 1)
-					{
-						zoneReceivers.AddItem(rtp);
-						rtp->zone = "CheckNeighbours";
-					}
-					else
-						zoneCenters.AddItem(rtp);
-				}
-				else if (type == HEALING_FOUNTAIN)
-				{
-					rtp->healingFountain = true;
+					String text = div->data;
+					EvaluateText(text, rtp);
 				}
 			}
-			aabb.Expand(pos);
+
 			/// Assign it.
+			if (type == ZONE)
+			{
+				zoneTiles.AddItem(rtp);
+				// Look for the target zone within, if possible.
+				rtp->isZone = true;
+				if (rtp->text.Length() == 0){
+					zoneReceivers.AddItem(rtp);
+					rtp->text = "CheckNeighbours";
+				}
+				else
+					zoneCenters.AddItem(rtp);
+			}
+			else if (type == HEALING_FOUNTAIN)
+			{
+				rtp->healingFountain = true;
+			}
 		}
 	}
 	/// Spread zone data as needed.
@@ -225,7 +229,7 @@ bool Zone::Load(String zone)
 		for (int j = 0; j < zoneCenters.Size(); ++j)
 		{
 			RRTileProperty * rtp2 = zoneCenters[j];
-			float dist = (rtp2->owner->worldPosition - rtp->owner->worldPosition).LengthSquared();
+			float dist = (rtp2->position - rtp->position).LengthSquared();
 			if (dist < minDist)
 			{
 				minDist = dist;
@@ -233,32 +237,43 @@ bool Zone::Load(String zone)
 			}
 		}
 		if (closest)
-			rtp->zone = closest->zone;
+			rtp->text = closest->text;
 	}
 	/// Calc aabb. center etc.
 	aabb.UpdatePositionScaleUsingMinMax();
 	std::cout<<"\nAABB: "<<aabb.position<<" scale: "<<aabb.scale;
 	aabb.position.y = 0;
 	// Add plane under-neath.
-	Entity * basePlane = MapMan.CreateEntity("Baseplane", ModelMan.GetModel(("plane")), TexMan.GetTexture("0x007F00"),  aabb.position - Vector3f(0,0.01f,0));
+	String ts = "0x07F00";
+	if (biome == "Mountain")
+		ts = "0xAD8349";
+	else if (biome == "Forest")
+		ts = "0x007F00";
+	Entity * basePlane = MapMan.CreateEntity("Baseplane", ModelMan.GetModel(("plane")), TexMan.GetTexture(ts),  aabb.position - Vector3f(0,0.01f,0));
 	QueuePhysics(new PMSetEntity(basePlane, PT_PHYSICS_SHAPE, ShapeType::MESH));
 	QueuePhysics(new PMSetEntity(basePlane, PT_SET_SCALE, 200.f));
+	
+	/// Start spawning entities.
+	loading = true;
+	tilesLoaded = 0;
+
+	extern List<String> biomes;
+	biomes.Clear();
 }
 
-Entity * playerEntity = 0;
+#include "RuneEntity.h"
+
+RuneEntity * player = 0;
+
 void Zone::CreatePlayer(ConstVec3fr  position)
 {
-	std::cout<<"\nSpawning at position: "<<position;
-	playerEntity = MapMan.CreateEntity("Player", ModelMan.GetModel("sphere"), TexMan.GetTexture("0x00FF00FF"), position + Vector3f(0, 0.5f,0));
-	QueuePhysics(new PMSetEntity(playerEntity, PT_PHYSICS_SHAPE, ShapeType::SPHERE));
-	QueuePhysics(new PMSetEntity(playerEntity, PT_PHYSICS_TYPE, PhysicsType::DYNAMIC));
-	QueuePhysics(new PMSetEntity(playerEntity, PT_SET_SCALE, 0.25f));
-	QueuePhysics(new PMSetEntity(playerEntity, PT_LINEAR_DAMPING, 0.5f));
-	QueuePhysics(new PMSetEntity(playerEntity, PT_RESTITUTION, 0.0f));
-	QueuePhysics(new PMSetEntity(playerEntity, PT_FRICTION, 0.02f));
+	if (player == 0)
+		player = new RuneEntity();
+	player->Spawn(position);
+
 	// Give movement capabilities?
 	playerCamera = CameraMan.NewCamera("PlayerCamera", true);
-	playerCamera->entityToTrack = playerEntity;
+	playerCamera->entityToTrack = player->graphicalEntity;
 	playerCamera->trackingMode = TrackingMode::ADD_POSITION;
 	playerCamera->rotation.x = Angle(PI/2);
 	playerCamera->rotation.y = 0;
@@ -279,11 +294,8 @@ void Zone::ZoneTo(String zone, ConstVec3fr dir)
 		return;
 	}
 	String zoningFrom = currentZone;
-	/// Check player velocity, copy it.
-	Vector3f playerDir = playerEntity->Velocity().NormalizedCopy();
 	// Remove player.
 	MapMan.DeleteAllEntities();
-	playerEntity = 0;
 	Sleep(20);
 	Load(zone);
 	/// Place correctly?
@@ -292,23 +304,61 @@ void Zone::ZoneTo(String zone, ConstVec3fr dir)
 	for (int i = 0; i < zoneTiles.Size(); ++i)
 	{
 		RRTileProperty * rrtp = zoneTiles[i];
-		if (rrtp->zone == zoningFrom)
+		if (rrtp->text == zoningFrom)
 		{
 			/// Place here?
-			average += rrtp->owner->worldPosition;
+			average += rrtp->position;
 			++num;
 		}
 	}
 	average /= MaximumFloat(float(num), 1.f);
-//	Vector3f dirToCenter = (aabb.position - average).NormalizedCopy();
-	Vector3f pos = average + (dir) * 1.25f;
-	CreatePlayer(pos);
+	/// Check nearest Arrival tile nearby.
+	Vector3f closest;
+	float closestDist = 10000.f;
+	for (int i = 0; i < rtps.Size(); ++i)
+	{
+		RRTileProperty * rtp = rtps[i];
+		if (!rtp->arrival)
+			continue;
+		float dist = (rtp->position - average).LengthSquared();
+		if (dist < closestDist)
+		{
+			closestDist = dist;
+			closest = rtp->position;
+		}
+	}
+	playerSpawnPos = closest;	
 }
 
 void Zone::Process(int timeInMs)
 {
 	static int seconder = 0;
 	seconder += timeInMs;
+
+	if (loading)
+	{
+		// Spawn some more entities.
+		int toLoad = tilesLoaded + 10;
+		for (; tilesLoaded < toLoad; ++tilesLoaded)
+		{
+			rtps[tilesLoaded]->SpawnEntities();
+			if (tilesLoaded >= rtps.Size() - 1)
+			{
+				loading = false;
+				CreatePlayer(playerSpawnPos);
+				break;
+			}
+		}
+		return;
+	}
+
+	Entity * playerEntity = 0;
+	if (player)
+	{
+		playerEntity = player->physicsEntity;
+	}
+
+
 	if (seconder > 1000)
 	{
 		seconder = seconder % 1000;
@@ -384,12 +434,12 @@ void Zone::ProcessMessage(Message * message)
 		case MessageType::COLLISSION_CALLBACK:
 		{
 			CollisionCallback * cc = (CollisionCallback*) message;
-			Entity * object = (cc->one == playerEntity)? object = cc->two : object = cc->one;
+			Entity * object = (cc->one == player->physicsEntity)? object = cc->two : object = cc->one;
 			RRTileProperty * rtp = object->GetProperty<RRTileProperty>();
 			Time now = Time::Now();
 			if (rtp)
 			{
-				if (rtp->zone.Length() && rtp->zone != currentZone)
+				if (rtp->isZone && rtp->text.Length() && rtp->text != currentZone)
 				{
 					if ((now - zoneReqTime).Seconds() < 1)
 					{
@@ -398,7 +448,7 @@ void Zone::ProcessMessage(Message * message)
 					}
 					/// Queue up the zoning, ignore next requests for the next second?
 					Vector3f offset = (object->worldPosition - previousPosition).NormalizedCopy() * 1.3f;
-					ZoneTo(rtp->zone, offset);
+					ZoneTo(rtp->text, offset);
 					zoneReqTime = Time::Now();
 				}
 			}

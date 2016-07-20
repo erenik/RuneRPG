@@ -1,9 +1,11 @@
 /// Emil Hedemalm
-/// 2014-01-20
-/// A structure for handling entity save/load/creation for the RuneRPG game.
+/// 2016-07-20
+/// Base class for all animatable entities on the map (and in battle too?)
 
 #ifndef RUNE_ENTITY_H
 #define RUNE_ENTITY_H
+
+#include "Entity/Entity.h"
 
 /// A structure for handling entity save/load/creation for the RuneRPG game. Subclass to add further adjustments/statistics. 
 class RuneEntity {
@@ -12,12 +14,21 @@ private:
 	/// List of all loaded/created types.
 	List<RuneEntity*> entityTypes;
 public:
+
+	RuneEntity()
+	{
+		graphicalEntity = physicsEntity = 0;
+
+	}
 	// Static functions handling all these entities!
-	static RuneEntity * 
-	static bool Save(String toFile);
-	static bool Load(String fromFile);
+//	static RuneEntity * 
+//	static bool Save(String toFile);
+//	static bool Load(String fromFile);
 #define RuneEntities RuneEntityTypes
-	static List<RuneEntity> RuneEntityTypes();
+//	static List<RuneEntity> RuneEntityTypes();
+
+	/// Spawn onto grid.
+	void Spawn(ConstVec3fr atPosition);
 
 	// Name of the entity, yow
 	String name;
@@ -30,12 +41,15 @@ public:
 	String animSet;
 
 	// Size on the grid.
-	int sizeX, sizeY;
+	Vector2i size;
 	// Centered, left, right, etc. Default is centered on X, bottom on Y.
 	int alignment;
 	
 	// Further descriptions for this kind of entity. Can be anything extra?
-	String description.
+	String description;
+
+	/// By default the physics entity is the parent of the graphical entity, though this can be disjuncted for animations.
+	Entity * graphicalEntity, * physicsEntity;
 
 };
 

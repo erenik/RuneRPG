@@ -64,7 +64,7 @@ void RRGameState::OnEnter(AppState * previousState)
 
 	zone.Load("Player Village");
 	/// Create a player?
-	zone.CreatePlayer(Vector3f(21,0,21));
+	zone.playerSpawnPos = Vector3f(21,0,21);
 }
 
 /// Main processing function, using provided time since last frame.
