@@ -21,6 +21,7 @@ public:
 	{
 		graphicalEntity = physicsEntity = 0;
 		movingProp = 0;
+		isNpc = false;
 	}
 	// Static functions handling all these entities!
 //	static RuneEntity * 
@@ -50,6 +51,8 @@ public:
 	// Further descriptions for this kind of entity. Can be anything extra?
 	String description;
 
+	/// false
+	bool isNpc;
 	/// By default the physics entity is the parent of the graphical entity, though this can be disjuncted for animations.
 	Entity * graphicalEntity, * physicsEntity;
 	/// Properties.

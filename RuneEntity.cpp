@@ -40,7 +40,10 @@ void RuneEntity::Spawn(ConstVec3fr atPosition)
 	physicsEntity->SetPosition(pos);
 
 	/// Add graphical entity as child.
-	graphicalEntity = EntityMan.CreateEntity("Player", ModelMan.GetModel("plane"), TexMan.GetTexture("img/Smile"));
+	String texture = "img/Smile.png";
+	if (isNpc)
+		texture = "img/SmileNPC.png";
+	graphicalEntity = EntityMan.CreateEntity("Player", ModelMan.GetModel("plane"), TexMan.GetTexture(texture));
 	graphicalEntity->inheritPositionOnly = true;
 	physicsEntity->AddChild(graphicalEntity);
 

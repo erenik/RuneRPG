@@ -7,6 +7,8 @@
 
 #include "RRTileProperty.h"
 
+class RuneEntity;
+
 class Zone 
 {
 public:
@@ -51,6 +53,9 @@ private:
 	int tilesLoaded; // Related to 'loading' above. from 0 to rtps.Size()
 	/// o-o
 	List<RRTileProperty*> zoneTiles, rtps;
+
+	/// NPCs in this zone.
+	List<RuneEntity*> npcs;
 };
 
 #endif

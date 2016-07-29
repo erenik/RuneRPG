@@ -359,7 +359,18 @@ void Zone::Load()
 		int toLoad = tilesLoaded + 100;
 		for (; tilesLoaded < toLoad && tilesLoaded < rtps.Size(); ++tilesLoaded)
 		{
-			rtps[tilesLoaded]->SpawnEntities();
+			RRTileProperty * rtp = rtps[tilesLoaded];
+			rtp->SpawnEntities();
+			if (rtp->type == NPC)
+			{
+				// Spawn an NPC here too.
+				RuneEntity * npc = new RuneEntity();
+				npc->name = rtp->text;
+				npc->isNpc = true;
+				/// Spawn it right away too?
+				npc->Spawn(rtp->position);
+				npcs.AddItem(npc);
+			}
 			if (tilesLoaded >= rtps.Size() - 1)
 			{
 				++loading;
@@ -476,6 +487,8 @@ void Zone::ProcessMessage(Message * message)
 	{
 		case MessageType::COLLISSION_CALLBACK:
 		{
+			if (!player)
+				return;
 			CollisionCallback * cc = (CollisionCallback*) message;
 			Entity * object = (cc->one == player->physicsEntity)? object = cc->two : object = cc->one;
 			RRTileProperty * rtp = object->GetProperty<RRTileProperty>();
