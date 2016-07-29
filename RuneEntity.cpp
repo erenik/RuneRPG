@@ -28,6 +28,9 @@
 #include "File/FileUtil.h"
 #include "File/LogFile.h"
 
+#include "Pathfinding/PathableProperty.h"
+#include "RRMovingProperty.h"
+
 /// Spawn onto grid.
 void RuneEntity::Spawn(ConstVec3fr atPosition)
 {
@@ -55,6 +58,16 @@ void RuneEntity::Spawn(ConstVec3fr atPosition)
 	QueueGraphics(new GMSetEntityb(graphicalEntity, GT_DEPTH_WRITE, false));
 	QueueGraphics(new GMSetEntityf(graphicalEntity, GT_SCALE, 1.f));
 	QueueGraphics(new GMSetEntityb(graphicalEntity, GT_IS_ALPHA_ENTITY, true));
+
+
+	/// Add Pathable property for automated pathfinding.
+	PathableProperty * pp = new PathableProperty(physicsEntity);
+	pp->proximityThreshold = 1.4f;
+	pp->updateIntervalMs = 200;
+	physicsEntity->properties.AddItem(pp);
+
+	movingProp = new RRMovingProperty(physicsEntity);
+	physicsEntity->properties.AddItem(movingProp);
 }
 
 

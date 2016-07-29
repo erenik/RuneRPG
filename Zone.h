@@ -35,8 +35,19 @@ public:
 	String biome;
 
 private:
+	/// Generates a navmesh based on the given walkable tiles.
+	void GenerateNavMesh();
+	/// Called iteratively while loading the map.
+	void Load();
+
 	/// While true, is loading - spawning - entities. This to reduce lag in window maneuverability. Spawns 10 tiles per frame until done.
-	bool loading;
+	int loading;
+	enum {
+		LOADING_DONE = 0,
+		SPAWN_TILES,
+		GENERATE_NAVMESH,
+
+	};
 	int tilesLoaded; // Related to 'loading' above. from 0 to rtps.Size()
 	/// o-o
 	List<RRTileProperty*> zoneTiles, rtps;

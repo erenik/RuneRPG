@@ -22,6 +22,9 @@
 
 #include "File/FileUtil.h"
 #include "File/LogFile.h"
+#include "Pathfinding/PathMessage.h"
+#include "Random/Random.h"
+#include "RRMovingProperty.h"
 
 Camera * Zone::editCamera = 0, * playerCamera = 0;
 
@@ -330,6 +333,51 @@ void Zone::ZoneTo(String zone, ConstVec3fr dir)
 	playerSpawnPos = closest;	
 }
 
+#include "Pathfinding/WaypointManager.h"
+void Zone::GenerateNavMesh()
+{
+	NavMesh * nm = WaypointMan.GetNavMesh(currentZone);
+	if (!nm)
+		nm = WaypointMan.CreateNavMesh(currentZone);
+	std::cout<<"\nGenerating "<<rtps.Size()<<" waypoints";
+	for (int i = 0; i < rtps.Size(); ++i)
+	{
+		RRTileProperty * rtp = rtps[i];
+		if (!rtp->walkable)
+			continue; // Skip walkables? for now.
+		nm->AddWaypoint(new Waypoint(rtp->position));
+	}
+	std::cout<<"\nConnecting waypoints by proximity...";
+	nm->ConnectWaypointsByProximity(1.1f);
+	std::cout<<"\nNavmesh generated";
+}
+void Zone::Load()
+{
+	if (loading == SPAWN_TILES)
+	{
+		// Spawn some more entities....wtf?
+		int toLoad = tilesLoaded + 100;
+		for (; tilesLoaded < toLoad && tilesLoaded < rtps.Size(); ++tilesLoaded)
+		{
+			rtps[tilesLoaded]->SpawnEntities();
+			if (tilesLoaded >= rtps.Size() - 1)
+			{
+				++loading;
+			}
+		}
+	}
+	else if (loading == GENERATE_NAVMESH)
+	{
+		GenerateNavMesh();
+		++loading;
+	}
+	else
+	{
+		loading = false;
+		CreatePlayer(playerSpawnPos);
+	}
+}
+
 void Zone::Process(int timeInMs)
 {
 	static int seconder = 0;
@@ -337,18 +385,7 @@ void Zone::Process(int timeInMs)
 
 	if (loading)
 	{
-		// Spawn some more entities.
-		int toLoad = tilesLoaded + 10;
-		for (; tilesLoaded < toLoad; ++tilesLoaded)
-		{
-			rtps[tilesLoaded]->SpawnEntities();
-			if (tilesLoaded >= rtps.Size() - 1)
-			{
-				loading = false;
-				CreatePlayer(playerSpawnPos);
-				break;
-			}
-		}
+		Load();
 		return;
 	}
 
@@ -400,6 +437,13 @@ void Zone::Process(int timeInMs)
 		std::cout<<"\nPos: "<<playerEntity->worldPosition;
 		Sleep(100);
 	}
+	if (InputMan.KeyPressed(KEY::G))
+	{
+		// Go walking!
+		Random r;
+		SetPathDestinationMessage walk(rtps[r.Randi() % rtps.Size()]->position); // Get random position?
+		playerEntity->ProcessMessage(&walk);
+	}
 	if (InputMan.KeyPressed(KEY::L))
 	{
 		MapMan.DeleteAllEntities();
@@ -414,11 +458,10 @@ void Zone::Process(int timeInMs)
 	static Vector2i oldDir;
 	if (oldDir != dir && playerEntity)
 	{
-		QueuePhysics(new PMSetEntity(playerEntity, PT_ACCELERATION, - walkSpeed * Vector3f(float(dir.x), 0, float(dir.y))));
 		if (dir.Length())
-			QueuePhysics(new PMSetEntity(playerEntity, PT_LINEAR_DAMPING, 0.5f));
+			player->movingProp->Walk(Vector3f(-dir.x, 0, -dir.y));
 		else 
-			QueuePhysics(new PMSetEntity(playerEntity, PT_LINEAR_DAMPING, 0.1f));
+			player->movingProp->Stop();
 		oldDir = dir;
 	}
 }

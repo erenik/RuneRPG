@@ -27,7 +27,7 @@ enum
 
 #define RTP RRTileProperty
 
-#include "Entity/EntityProperty.h"
+#include "Properties.h"
 class RRTileProperty : public EntityProperty
 {
 public:
@@ -41,7 +41,7 @@ public:
 		isZone = false;
 		type = JUST_CREATED;
 	}
-	static int ID() { return 7;};
+	static int ID() { return RR_TILE_PROPERTY;};
 
 	/// Spawns representational entities for this property.
 	void SpawnEntities();

@@ -7,9 +7,11 @@
 
 #include "Entity/Entity.h"
 
-/// A structure for handling entity save/load/creation for the RuneRPG game. Subclass to add further adjustments/statistics. 
-class RuneEntity {
+class RRMovingProperty;
 
+/// A structure for handling entity save/load/creation for the RuneRPG game. Subclass to add further adjustments/statistics. 
+class RuneEntity
+{
 private:
 	/// List of all loaded/created types.
 	List<RuneEntity*> entityTypes;
@@ -18,7 +20,7 @@ public:
 	RuneEntity()
 	{
 		graphicalEntity = physicsEntity = 0;
-
+		movingProp = 0;
 	}
 	// Static functions handling all these entities!
 //	static RuneEntity * 
@@ -50,6 +52,8 @@ public:
 
 	/// By default the physics entity is the parent of the graphical entity, though this can be disjuncted for animations.
 	Entity * graphicalEntity, * physicsEntity;
+	/// Properties.
+	RRMovingProperty * movingProp;
 
 };
 
