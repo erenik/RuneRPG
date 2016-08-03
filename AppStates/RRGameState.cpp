@@ -30,6 +30,8 @@
 #include "Entity/EntityProperty.h"
 #include "Zone.h"
 #include "Graphics/Camera/CameraUtil.h"
+#include "RRIntegrator.h"
+#include "Physics/Messages/PhysicsMessage.h"
 
 // Static variables.
 RRSession * RRGameState::session;
@@ -45,6 +47,7 @@ RRGameState::RRGameState()
 /// Function when entering this state, providing a pointer to the previous StateMan.
 void RRGameState::OnEnter(AppState * previousState)
 {
+	QueuePhysics(new PMSet(new RRIntegrator()));
 
 	this->inputMapping.bindings.Add(CreateDefaultCameraBindings());
 
@@ -56,7 +59,6 @@ void RRGameState::OnEnter(AppState * previousState)
 
 	QueueGraphics(new GMSetUI((UserInterface*)NULL));
 	QueueGraphics(new GMSet(GT_CLEAR_COLOR, Vector3f(0,0,0)));
-	QueuePhysics(new PMSet(new FirstPersonIntegrator()));
 	QueuePhysics(new PMSet(new FirstPersonCD()));
 	FirstPersonCR * cr = new FirstPersonCR();
 	cr->inRestThreshold = 0.001f;

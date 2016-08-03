@@ -48,6 +48,7 @@ private:
 		LOADING_DONE = 0,
 		SPAWN_TILES,
 		GENERATE_NAVMESH,
+		SPAWN_NPCS,
 
 	};
 	int tilesLoaded; // Related to 'loading' above. from 0 to rtps.Size()

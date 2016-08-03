@@ -31,6 +31,48 @@ Random tileRand;
 List<String> biomes;
 extern Zone zone;
 
+String GetTypeString(int type)
+{
+	switch(type)
+	{
+		case NOT_ADDED_YET: return "Not added";
+		case JUST_CREATED: return "Just created";
+		case WALKABLE: return "Walkable";
+		case ROAD: return "Road";
+		case BIOME: return "Biome";
+		case NPC: return "NPC";
+		case SHALLOW_WATER: return "Shallow water";
+		default: return "Default (not added?)";
+	}
+	/*
+enum 
+{
+	NOT_ADDED_YET,
+	JUST_CREATED,
+	WALKABLE,
+	UNWALKABLE, BIOME = UNWALKABLE,
+	ROAD,
+	ZONE,
+	WALL,
+	BUILDING,
+	SHALLOW_WATER,
+	WATER,
+	ENEMY_SPAWN_AREA,
+	BLACK_VOID,
+	HEALING_FOUNTAIN,
+	EVENT,
+	NPC, 
+	ZONE_INTO_BUILDING,
+	DOOR,
+};*/
+
+}
+
+String RRTileProperty::ToString()
+{
+	return text+" Type: "+GetTypeString(type);
+}
+
 /// Spawns representational entities for this property.
 void RRTileProperty::SpawnEntities()
 {
@@ -41,7 +83,7 @@ void RRTileProperty::SpawnEntities()
 		result = GetFilePathsInDirectory("img/Biome", biomes);
 	}
 	/// Move creation of entity/representation into RRTileProperty file? No?
-
+	bool isProperTexture = false;
 	/// Placeholder texture colors.
 	String texture;
 	List<String> possibleTextures;
@@ -56,6 +98,7 @@ void RRTileProperty::SpawnEntities()
 				int randI = tileRand.Randi(1000);
 //				std::cout<<"\nRandI: "<<randI<<" : "<<randI % biomes.Size();
 				texture = biomes[randI % biomes.Size()];
+				isProperTexture = true;
 			}
 			break;
 		}
@@ -64,8 +107,9 @@ void RRTileProperty::SpawnEntities()
 		case WALKABLE: 
 			break; // Nothing needed graphically wise... for now.
 		case NPC:
+			return;
 		case EVENT:
-			texture = "0x007F00"; 
+			texture = "0x007F00";
 			break;
 		case ROAD: texture = "0xd9d9d9"; break;
 		case ZONE: texture = "0x447FAA"; break; // 0xE5E5FF
@@ -100,6 +144,8 @@ void RRTileProperty::SpawnEntities()
 		graphicalEntity->SetScale(Vector3f(scale.x, 1, scale.y));
 		graphicalEntity->properties.AddItem(this);
 		QueueGraphics(new GMSetEntityb(graphicalEntity, GT_IS_ALPHA_ENTITY, true));
+		if (!isProperTexture)
+			QueueGraphics(new GMSetEntitys(graphicalEntity, GT_ENTITY_GROUP, "Tiles"));
 		MapMan.AddEntity(graphicalEntity, true, false);
 		/// only create if needed? or rather, skip adding the pr
 		this->owners.Add(entity, graphicalEntity);

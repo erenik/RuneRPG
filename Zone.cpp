@@ -26,6 +26,9 @@
 #include "Random/Random.h"
 #include "RRMovingProperty.h"
 
+#include "Physics/PhysicsManager.h"
+#include "RRDialogueProperty.h"
+
 Camera * Zone::editCamera = 0, * playerCamera = 0;
 
 // Time lastZone = ;
@@ -33,6 +36,7 @@ AABB aabb;
 String currentZone, previousZone;
 Time zoneReqTime = Time::Now();
 Vector3f previousPosition; // Saved every second? two seconds?
+Vector2i oldDir;
 
 struct Style 
 {
@@ -85,6 +89,10 @@ void Zone::EvaluateText(String text, RTP * rtp)
 	}
 }
 
+#include "Pathfinding/PathManager.h"
+#include "OS/Sleep.h"
+#include "RRPathingProperty.h"
+
 /// Name of zone, default dir "data/Zones/*.html"
 bool Zone::Load(String zone)
 {
@@ -94,6 +102,8 @@ bool Zone::Load(String zone)
 	currentZone = zone;
 	zoneTiles.Clear();
 	styles.Clear();
+	npcs.ClearAndDelete();
+
 	XMLParser parser;
 	bool ok = parser.Read("data/Zones/"+zone+".html");
 	if (!ok)
@@ -181,7 +191,8 @@ bool Zone::Load(String zone)
 				case BLACK_VOID:
 				case WATER:
 				case ZONE_INTO_BUILDING:
-					walkable = false; break;
+					walkable = false; 
+					break;
 			}
 			// Do different stuff depending on the style?
 			/// Skip walkables for now? Add 'em later when we know where we need 'em?
@@ -255,6 +266,7 @@ bool Zone::Load(String zone)
 	Entity * basePlane = MapMan.CreateEntity("Baseplane", ModelMan.GetModel(("plane")), TexMan.GetTexture(ts),  aabb.position - Vector3f(0,0.01f,0));
 	QueuePhysics(new PMSetEntity(basePlane, PT_PHYSICS_SHAPE, ShapeType::MESH));
 	QueuePhysics(new PMSetEntity(basePlane, PT_SET_SCALE, 200.f));
+	QueueGraphics(new GMSetEntitys(basePlane, GT_ENTITY_GROUP, "Tiles"));
 	
 	/// Start spawning entities.
 	loading = true;
@@ -262,6 +274,8 @@ bool Zone::Load(String zone)
 
 	extern List<String> biomes;
 	biomes.Clear();
+	QueuePhysics(new PhysicsMessage(PM_RESUME_SIMULATION));
+
 }
 
 #include "RuneEntity.h"
@@ -339,6 +353,8 @@ void Zone::GenerateNavMesh()
 	NavMesh * nm = WaypointMan.GetNavMesh(currentZone);
 	if (!nm)
 		nm = WaypointMan.CreateNavMesh(currentZone);
+	nm->waypoints.ClearAndDelete(); // Cleanse it.
+
 	std::cout<<"\nGenerating "<<rtps.Size()<<" waypoints";
 	for (int i = 0; i < rtps.Size(); ++i)
 	{
@@ -361,16 +377,6 @@ void Zone::Load()
 		{
 			RRTileProperty * rtp = rtps[tilesLoaded];
 			rtp->SpawnEntities();
-			if (rtp->type == NPC)
-			{
-				// Spawn an NPC here too.
-				RuneEntity * npc = new RuneEntity();
-				npc->name = rtp->text;
-				npc->isNpc = true;
-				/// Spawn it right away too?
-				npc->Spawn(rtp->position);
-				npcs.AddItem(npc);
-			}
 			if (tilesLoaded >= rtps.Size() - 1)
 			{
 				++loading;
@@ -382,11 +388,48 @@ void Zone::Load()
 		GenerateNavMesh();
 		++loading;
 	}
+	else if (loading == SPAWN_NPCS)
+	{
+		RRPathingProperty::pause = false;
+		std::cout<<"\nSpawning NPCs";
+		for (int i = 0; i < rtps.Size(); ++i)
+		{
+//			continue;
+			RRTileProperty * rtp = rtps[i];
+			if (rtp->type == NPC)
+			{
+				// Spawn an NPC here too.
+				RuneEntity * npc = new RuneEntity();
+				npc->name = rtp->text;
+				npc->isNpc = true;
+				/// Spawn it right away too?
+				npc->Spawn(rtp->position);
+				npcs.AddItem(npc);
+			}
+		}
+		++loading;
+	}
 	else
 	{
 		loading = false;
 		CreatePlayer(playerSpawnPos);
+		std::cout<<"\nTotal entities: "<<MapMan.GetEntities().Size();
+		oldDir = Vector2i();
 	}
+}
+
+List<Entity*> GetEntities(ConstVec3fr nearPos, float andWithinRadius)
+{
+	Entities ent = MapMan.GetEntities();
+	/// Interact with nearby entities.
+	Entities relevant;
+	for (int i = 0; i < ent.Size(); ++i)
+	{
+		Entity * e = ent[i];
+		if ((e->worldPosition - nearPos).Length() < andWithinRadius)
+			relevant.AddItem(e);
+	}
+	return relevant;
 }
 
 void Zone::Process(int timeInMs)
@@ -423,6 +466,32 @@ void Zone::Process(int timeInMs)
 		++dir.x;
 	if (InputMan.KeyPressed(KEY::D))
 		--dir.x;
+	if (InputMan.KeyPressed(KEY::L))
+	{
+		Entities ent = MapMan.ActiveMap()->GetEntities();
+		std::cout<<"\nListing entities: "<<ent.Size();
+		for (int i = 0; i < ent.Size(); ++i)
+		{
+			std::cout<<"\n"<<ent[i]->name;
+		}
+	}
+	if (InputMan.KeyPressed(KEY::ENTER))
+	{
+		if (Dialogue::ActiveDialogue())
+		{
+			Dialogue::ActiveDialogue()->Continue();
+			Sleep(200);
+			return;
+		}
+		List<Entity*> relevantEntities = GetEntities(playerEntity->worldPosition + playerEntity->Velocity().NormalizedCopy() * 0.5f, 0.8f);
+		Message message("Interact");
+		for (int i = 0; i < relevantEntities.Size(); ++i)
+		{
+			Entity * e = relevantEntities[i];
+			e->ProcessMessage(&message);
+		}
+		Sleep(200);
+	}
 	if (InputMan.KeyPressed(KEY::C))
 	{
 		CameraMan.NextCamera();
@@ -435,7 +504,7 @@ void Zone::Process(int timeInMs)
 //		c->SetRatioF(10, 20, true); // rotation.x += Angle(0.1f);
 		Sleep(100);
 	}
-	if (InputMan.KeyPressed(KEY::R))
+	if (InputMan.KeyPressed(KEY::R) && InputMan.KeyPressed(KEY::S))
 	{
 		/// Respawn.
 		MapMan.DeleteEntity(playerEntity);
@@ -452,11 +521,28 @@ void Zone::Process(int timeInMs)
 	{
 		// Go walking!
 		Random r;
-		SetPathDestinationMessage walk(rtps[r.Randi() % rtps.Size()]->position); // Get random position?
+		RRTileProperty * rtp = 0;
+		int index = r.Randi() % rtps.Size();
+		while(rtp == 0 || rtp->walkable == false)
+		{
+			index = r.Randi() % rtps.Size();
+			rtp = rtps[index];
+		}
+		std::cout<<"\nWalking to random tile: "<<index<<" "<<rtp->ToString();
+		SetPathDestinationMessage walk(rtp->position); // Get random position?
 		playerEntity->ProcessMessage(&walk);
+		Sleep(200);
 	}
-	if (InputMan.KeyPressed(KEY::L))
+	if (InputMan.KeyPressed(KEY::L) && InputMan.KeyPressed(KEY::R))
 	{
+		/// Pause physics. - Queue it by bypassing the StateManager, or it will lag extra much.
+		PhysicsMan.QueueMessage(new PhysicsMessage(PM_PAUSE_SIMULATION));
+		/// Pause pathfinding. Wait until all path threads have returned.
+		RRPathingProperty::pause = true;
+	//	PathMan.acceptRequests = false;
+		while(PathMan.ThreadsActive()) 
+			SleepThread(10);
+
 		MapMan.DeleteAllEntities();
 		String zone = currentZone; 
 		currentZone = "";
@@ -465,8 +551,12 @@ void Zone::Process(int timeInMs)
 		Sleep(100);
 		return;
 	}
+
+	/// Don't update movement if dialogue is active.
+	if (Dialogue::ActiveDialogue())
+		return;
+
 	float walkSpeed = 15.f;
-	static Vector2i oldDir;
 	if (oldDir != dir && playerEntity)
 	{
 		if (dir.Length())
@@ -483,6 +573,16 @@ void Zone::ProcessMessage(Message * message)
 	Camera * activeCamera = CameraMan.ActiveCamera();
 	if (activeCamera == editCamera)
 		ProcessCameraMessages(msg, activeCamera);
+	if (msg.StartsWith("OnDialogueBegun"))
+	{
+		Message msg ("PauseMovement");
+		player->physicsEntity->ProcessMessage(&msg);
+	}
+	else if (msg.StartsWith("OnDialogueEnded"))
+	{
+		Message msg("ResumeMovement");
+		player->physicsEntity->ProcessMessage(&msg);
+	}
 	switch(message->type)
 	{
 		case MessageType::COLLISSION_CALLBACK:
@@ -491,12 +591,15 @@ void Zone::ProcessMessage(Message * message)
 				return;
 			CollisionCallback * cc = (CollisionCallback*) message;
 			Entity * object = (cc->one == player->physicsEntity)? object = cc->two : object = cc->one;
+			Entity * collider = cc->one == object? cc->two : cc->one;
 			RRTileProperty * rtp = object->GetProperty<RRTileProperty>();
 			Time now = Time::Now();
 			if (rtp)
 			{
 				if (rtp->isZone && rtp->text.Length() && rtp->text != currentZone)
 				{
+					if (collider != player->physicsEntity)
+						return;
 					if ((now - zoneReqTime).Seconds() < 1)
 					{
 						std::cout<<"\nSkipping request, already got one in the last second.";

@@ -28,22 +28,25 @@
 #include "File/FileUtil.h"
 #include "File/LogFile.h"
 
+#include "RRDialogueProperty.h"
 #include "Pathfinding/PathableProperty.h"
 #include "RRMovingProperty.h"
+#include "RRPathingProperty.h"
 
 /// Spawn onto grid.
 void RuneEntity::Spawn(ConstVec3fr atPosition)
 {
 	std::cout<<"\nSpawning at position: "<<atPosition;
 	Vector3f pos = atPosition + Vector3f(0, 0.5f,0);
-	physicsEntity = EntityMan.CreateEntity("Player", ModelMan.GetModel("plane"), 0);
+	String baseName = isNpc? "NPC" : "Player";
+	physicsEntity = EntityMan.CreateEntity(baseName + "_Physical", ModelMan.GetModel("plane"), 0);
 	physicsEntity->SetPosition(pos);
 
 	/// Add graphical entity as child.
 	String texture = "img/Smile.png";
 	if (isNpc)
 		texture = "img/SmileNPC.png";
-	graphicalEntity = EntityMan.CreateEntity("Player", ModelMan.GetModel("plane"), TexMan.GetTexture(texture));
+	graphicalEntity = EntityMan.CreateEntity(baseName + "_Graphical", ModelMan.GetModel("plane"), TexMan.GetTexture(texture));
 	graphicalEntity->inheritPositionOnly = true;
 	physicsEntity->AddChild(graphicalEntity);
 
@@ -71,6 +74,19 @@ void RuneEntity::Spawn(ConstVec3fr atPosition)
 
 	movingProp = new RRMovingProperty(physicsEntity);
 	physicsEntity->properties.AddItem(movingProp);
+
+	RRPathingProperty * rpp = new RRPathingProperty(physicsEntity, pos);
+	physicsEntity->properties.AddItem(rpp);
+	if (isNpc)
+	{
+		movingProp->walkingAcceleration = 5.f;
+		rpp->InitRandom();
+		rpp->OnSpawn();
+		/// Give default speech.
+		RRDialogueProperty * rrdp = new RRDialogueProperty(physicsEntity);
+		rrdp->InitDefaultGreeting();
+		physicsEntity->properties.AddItem(rrdp);
+	}
 }
 
 

@@ -42,6 +42,7 @@ public:
 		type = JUST_CREATED;
 	}
 	static int ID() { return RR_TILE_PROPERTY;};
+	String ToString();
 
 	/// Spawns representational entities for this property.
 	void SpawnEntities();

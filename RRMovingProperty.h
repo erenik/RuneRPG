@@ -9,6 +9,15 @@
 #include "Entity/EntityProperty.h"
 #include "Properties.h"
 
+/** Reacts to the following messages:
+		Type:MoveToMessage (via PathableProperty)
+		OnFinalDestinationSet (via PathableProperty)
+		ResumeMovement (via RRDialogueProperty et al)
+		PauseMovement (via RRDialogueProperty et al)
+
+	Issues following messages:
+		DestinationReached
+*/
 class RRMovingProperty : public EntityProperty
 {
 public:
@@ -36,8 +45,17 @@ public:
 		WALKING_TO, // destination
 	};
 private:
+	bool finalDestinationSet;
 	int accumulator; // Update frequency once per second by default?
 	Vector3f destination;
+	/** Distance we have approached the goal during the past pathfinding interval (200 ms). Smoothed calculation updating 1/20th every iteration. If it goes below 0.01, it will assume that it has gotten stuck somewhere.
+		Is reset to 1.0 when starting to walk.
+	*/
+	float distanceMoved;
+	Vector3f lastPosition;
+	Vector3f lastDestination;
+	Vector3f direction;
+	bool paused;
 };
 
 #endif
