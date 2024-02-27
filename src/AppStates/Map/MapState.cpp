@@ -1,39 +1,40 @@
-//// Emil Hedemalm
-//// 2013-06-28
-//
-//#include "MapState.h"
-//
+/// Evergreen IT AB
+/// 2024-02-28
+/// Map/zone navigation state. 50% of game time in here.
+
+#include "MapState.h"
+
+#include "EntityStates/RREntityState.h"
+#include "Graphics/Animation/AnimationManager.h"
+#include "Graphics/Camera/Camera.h"
+#include "Graphics/Messages/GMUI.h"
+#include "Graphics/Messages/GMSet.h"
+#include "Input/InputManager.h"
+#include "Maps/MapManager.h"
+#include "Maps/2D/TileMap2D.h"
+#include "Physics/Integrator.h"
+#include "Physics/Messages/PhysicsMessage.h"
+#include "Physics/PhysicsManager.h"
+#include "StateManager.h"
+#include "TextureManager.h"
+#include "Viewport.h"
+#include "Window/AppWindowManager.h"
+
 //#include "OS/Sleep.h"
 //#include "Actions.h"
 //#include "Message/Message.h"
-//#include "Viewport.h"
-//
 //#include "UI/UIButtons.h"
 //#include "UI/UserInterface.h"
-//
 //#include "PhysicsLib/Shapes/Ray.h"
-//
 //#include "Physics/Messages/CollisionCallback.h"
-//#include "Physics/Messages/PhysicsMessage.h"
-//#include "Physics/PhysicsManager.h"
 //#include "Physics/PhysicsProperty.h"
-//
 //#include "Entity/EntityProperty.h"
-//
 //#include "Graphics/Messages/GMParticles.h"
 //#include "Graphics/Messages/GMUI.h"
-//
-//#include "EntityStates/RREntityState.h"
 //#include "Battle/RuneBattler.h"
 //#include "Item/RuneShop.h"
-//
-//#include "Graphics/Camera/Camera.h"
-//#include "Graphics/Messages/GMSet.h"
 //#include "Graphics/Messages/GMSetEntity.h"
 //#include "Graphics/GraphicsManager.h"
-//#include "Graphics/Animation/AnimationManager.h"
-//
-//#include "Maps/2D/TileMap2D.h"
 //#include "../../RRPlayer.h"
 //#include "Player/PlayerManager.h"
 //#include "Script/Script.h"
@@ -56,112 +57,110 @@
 //
 //extern UserInterface * ui[GameStateID::MAX_GAME_STATES];
 //
-//MapState::MapState()
-//: RRGameState()
-//{
-//	id = RUNE_GAME_STATE_MAP;
-//	name = "MapState";
-//	enterMode = EnterMode::NULL_MODE;
-//	camera = CameraMan.NewCamera();
-//	mapToLoad = NULL;
-////	player = NULL;
-////	playerEntity = NULL;
-////	playerState = NULL;
-//	lastModifiedEntity = NULL;
-//	menuOpen = false;
-//	keyPressedCallback = true;
-////	activeShop = NULL;
-//	mapTestWindow = NULL;
-//	stepsTakenAfterZoning = 0;
-//	stepsSinceLastBattle = 0;
-//}
+
+MapState::MapState()
+: RRGameState()
+{
+	id = RUNE_GAME_STATE_MAP;
+	name = "MapState";
+	enterMode = EnterMode::NULL_MODE;
+	camera = CameraMan.NewCamera("Map camera");
+	mapToLoad = NULL;
+//	player = NULL;
+//	playerEntity = NULL;
+//	playerState = NULL;
+	lastModifiedEntity = NULL;
+	menuOpen = false;
+	keyPressedCallback = true;
+//	activeShop = NULL;
+	mapTestWindow = NULL;
+	stepsTakenAfterZoning = 0;
+	stepsSinceLastBattle = 0;
+}
+
+MapState::~MapState()
+{
+}
+
+
+// Creates the user interface for this state
+void MapState::CreateUserInterface(){
+	QueueGraphics(new GMPushUI("gui/MapState.gui"));
+}
+
+void MapState::OnEnter(AppState * previousState) {
+	std::cout<<"\nMapState::OnEnter";
+
+	// Load animation sets for map!
+	AnimationMan.LoadAnimationSetsFromDirectory("anim/Map");
+	AnimationMan.LoadAnimationSetsFromDirectory("anim/Battle");
+
+	// Set physics integrator to simple!
+	Integrator* integrator = new NoIntegrator();
+	QueuePhysics(new PMSet(integrator));
 //
-//MapState::~MapState()
-//{
-//}
-//
-//
-///// Creates the user interface for this state
-//void MapState::CreateUserInterface(){
-//	if (ui)
-//		delete ui;
-//	ui = new UserInterface();
-//	ui->Load("gui/MapState.gui");
-//}
-//
-//void MapState::OnEnter(AppState * previousState)
-//{
-//	std::cout<<"\nMapState::OnEnter";
-//	// Load initial texture and set it to render over everything else
-//	Graphics.QueueMessage(new GMSet(GT_OVERLAY_TEXTURE, TexMan.GetTexture("img/loadingData.png")));
-//	
-//	// Load animation sets for map!
-//	AnimationMan.LoadFromDirectory("anim/Map");
-//	AnimationMan.LoadFromDirectory("anim/Battle");
-//	// Set physics integrator to simple!
-//	Physics.QueueMessage(new PMSet(PT_INTEGRATOR_TYPE, IntegratorType::SIMPLE_PHYSICS));
-//
-////	Graphics.render
+//	Graphics.render
 //
 //
-//	/// For reloading maps, looking at coordinates, etc.
-//	if (!mapTestWindow)
-//	{
+	/// For reloading maps, looking at coordinates, etc.
+	if (!mapTestWindow)
+	{
 //		mapTestWindow = WindowMan.NewWindow("Map test");
-//		mapTestWindow->requestedSize = Vector2i(400, 600);
-//		mapTestWindow->requestedRelativePosition = Vector2i(-400,0);
-//		mapTestWindow->Create();
-//		mapTestWindow->ui = new UserInterface();
-//		mapTestWindow->ui->Load("gui/MapTest.gui");
-//		mapTestWindow->CreateGlobalUI();
-//		mapTestWindow->DisableAllRenders();
-//		mapTestWindow->renderUI = true;
-//	}		
-//	if (mapTestWindow)
-//		mapTestWindow->Show();
+	//	mapTestWindow->requestedSize = Vector2i(400, 600);
+	//	mapTestWindow->requestedRelativePosition = Vector2i(-400,0);
+	//	mapTestWindow->Create();
+	//	mapTestWindow->ui = new UserInterface();
+	//	mapTestWindow->ui->Load("gui/MapTest.gui");
+	//	mapTestWindow->CreateGlobalUI();
+	//	mapTestWindow->DisableAllRenders();
+	//	mapTestWindow->renderUI = true;
+	}		
+	if (mapTestWindow)
+		;//mapTestWindow->Show();
 //
 //
 //	SleepThread(100);
-//	// Begin loading textures here for the UI
-//	Graphics.QueueMessage(new GMSetUI(ui));
-//	/// Depending on previous state, modify menu.
-//	if (previousState->GetID() == RUNE_GAME_STATE_MAIN_MENU){
-//		/// Hide the menu.
-//		CloseMenu();
-//	}
+	
+	// Begin loading textures here for the UI
+	QueueGraphics(new GMSetUI(ui));
+
+	/// Depending on previous state, modify menu.
+	if (previousState->GetID() == RUNE_GAME_STATE_MAIN_MENU){
+		/// Hide the menu.
+		CloseMenu();
+	}
 //
-//	/// Grab first player, or create new one as needed?
-//	if (PlayerMan.NumPlayers() == NULL){
-//		RRPlayer * player = new RRPlayer("Player");
-//		PlayerMan.AddPlayer(player);
-//	}
+	/// Grab first player, or create new one as needed?
+	/*
+	if (PlayerMan.NumPlayers() == NULL){
+		RRPlayer * player = new RRPlayer("Player");
+		PlayerMan.AddPlayer(player);
+	}*/
+
+	/// Create entities for the players as needed? or later?
+
+	/// Continue should probably be default mode, yo.
+	if (enterMode == EnterMode::CONTINUE) {
+		std::cout<<"\nMapState::OnEnter Continue";
+		// Reload map we were on!
+		Map * map = MapMan.GetMap(currentMap);
+		assert(map);
+		MapMan.MakeActive(map);
 //
-//	/// Create entities for the players as needed? or later?
-//
-//	/// Continue should probably be default mode, yo.
-//	if (enterMode == EnterMode::CONTINUE)
-//	{
-//		std::cout<<"\nMapState::OnEnter Continue";
-//		// Reload map we were on!
-//		Map * map = MapMan.GetMap(currentMap);
-//		assert(map);
-//		MapMan.MakeActive(map);
-//
-//		/// Stuff. o.o
-//		/// Check if menu is open, if so set NavigateUI to true!
-//		if (menuOpen){
-//			InputMan.NavigateUI(true);
-//		}
+		/// Stuff. o.o
+		/// Check if menu is open, if so set NavigateUI to true!
+		if (menuOpen){
+			InputMan.SetNavigateUI(true);
+		}
 //
 //		/// Stop all players movement, e.g. after returning from a battle? Could check previous state for this?
-//		RREntityState * entityState = this->GetMainPlayerState();
-//		if (entityState)
-//		{
-//			entityState->StopMoving();
-//		}
-//	}
-//	else if (enterMode == EnterMode::TESTING_MAP)
-//	{
+		RREntityState * entityState = this->GetMainPlayerState();
+		if (entityState) {
+			entityState->StopMoving();
+		}
+	}
+	else if (enterMode == EnterMode::TESTING_MAP)
+	{
 //		assert(false);
 //		/*
 //		std::cout<<"\nMapState::OnEnter Testing map.";
@@ -177,33 +176,34 @@
 //		/// Call it explicitly if we came from the editor.
 //		activeMap->OnEnter();
 //		*/
-//	}
+	}
 //	/// Track camera on ze playah!
-//	TrackPlayer();
+	TrackPlayer();
 //
 //	// And set it as active
-//	Graphics.cameraToTrack = camera;
+	QueueGraphics(new GMSet(GT_MAIN_CAMERA, camera));
+
 ////	Graphics.UpdateProjection();
-//	/// Toggle debug renders
-//	Viewport * mainViewport = MainWindow()->MainViewport();
-//	mainViewport->EnableAllDebugRenders(false);
-//	mainViewport->renderFPS = true;
+
+
+	auto mainWindow = WindowMan.MainWindow();
+	/// Toggle debug renders
+	Viewport * mainViewport = mainWindow->MainViewport();
+	mainViewport->EnableAllDebugRenders(false);
+	mainViewport->renderFPS = true;
 //	Graphics.selectionToRender = NULL;
-//	mainViewport->renderNavMesh = true;
+	mainViewport->renderNavMesh = true;
 //
 //	// And start tha music..
-//#ifdef USE_AUDIO
-//	AudioMan.Play(BGM, "2013-02-21 Impacto.ogg", true);
-//#endif
-//
-//	ResetCamera();
-//
-//	// Set graphics manager to render UI, and remove the overlay-texture.
-//	Graphics.QueueMessage(new GMSetOverlay(NULL));
-//}
-//
-//void MapState::OnExit(AppState *nextState)
-//{
+#ifdef USE_AUDIO
+	AudioMan.Play(BGM, "2013-02-21 Impacto.ogg", true);
+#endif
+
+	ResetCamera();
+}
+
+
+void MapState::OnExit(AppState *nextState) {
 //	if (mapTestWindow)
 //		mapTestWindow->Hide();
 //
@@ -233,14 +233,14 @@
 //			enterMode = EnterMode::NULL_MODE;
 //			break;
 //	}
-//}
+}
 //
 //
 //
 //#include <ctime>
 //
-//void MapState::Process(int timeInMs)
-//{
+
+void MapState::Process(int timeInMs) {
 //	SleepThread(10);
 //
 //	/// Fetch playersss
@@ -265,8 +265,9 @@
 //			}
 //		}
 //	}
-//};
-//
+};
+
+
 ///// Evaluate if we should trigger some kinda battle.
 //void MapState::PlayerPositionUpdated(Vector3i position)
 //{
@@ -332,8 +333,8 @@
 //	
 //
 //#define PAN_SPEED_MULTIPLIER (abs(camera->distanceFromCentreOfMovement)/2.0f + 1)
-//void MapState::MouseMove(int x, int y, bool lDown, bool rDown, UIElement * elementOver)
-//{
+void MapState::MouseMove(int x, int y, bool lDown, bool rDown, UIElement * elementOver)
+{
 //	if (elementOver)
 //		return;
 //	Camera * camera = Graphics.cameraToTrack;
@@ -418,8 +419,9 @@
 //	mouseX = x;
 //	mouseY = y;
 //	*/
-//}
-//
+}
+
+
 //void MapState::MouseWheel(float delta)
 //{
 //	camera->distanceFromCentreOfMovement += delta / 100.0f;
@@ -433,9 +435,10 @@
 //		camera->distanceFromCentreOfMovement = 0;
 //}
 //
-///// Callback from the Input-manager, query it for additional information as needed.
-//void MapState::KeyPressed(int keyCode, bool downBefore)
-//{
+
+// Callback from the Input-manager, query it for additional information as needed.
+void MapState::KeyPressed(int keyCode, bool downBefore)
+{
 //	if (downBefore)
 //		return;
 ////	std::cout<<"\nKey pressed: "<<keyCode;
@@ -447,10 +450,9 @@
 //		default: 
 //			break;
 //	}
-//}
-//
-//void MapState::OpenMenu()
-//{
+}
+
+void MapState::OpenMenu() {
 //	/// Open the menu if it isn't open already.
 //	InputMan.NavigateUI(true);
 //	if (!ui->IsInStack("MainMenu"))
@@ -467,17 +469,17 @@
 //	else {
 //		std::cout<<"\nMenu already open o-o";
 //	}
-//}
-//void MapState::CloseMenu()
-//{
+}
+
+void MapState::CloseMenu() {
 //	if (menuOpen){
 //		menuOpen = false;
 //		Graphics.QueueMessage(new GMPopUI("MainMenu", ui));
 //	}
 //	else
 //		std::cout<<"\nMenu already closed o-o";
-//}
-//
+}
+
 ///// Returns the entities the players are walking around with on the map.
 //List<Entity*> MapState::GetPlayerEntities()
 //{
@@ -618,9 +620,8 @@
 //		Graphics.QueueMessage(new GMAddUI(button, "ShopItemList"));
 //	}
 //}
-//
-//void MapState::ProcessMessage(Message * message)
-//{
+
+void MapState::ProcessMessage(Message * message) {
 //	switch(message->type)
 //	{
 //		case MessageType::STRING: 
@@ -831,29 +832,30 @@
 //		}
 //	}
 //	AppState::ProcessMessage(message);
-//}
-//
-//// To look at ze player?
-//void MapState::ResetCamera()
-//{
-//	camera->projectionType = Camera::ORTHOGONAL;
-//	camera->rotation = Vector3f();
-//	camera->zoom = 10.f;
-//	camera->farPlane = -50.0f;
+}
+
+// To look at ze player?
+void MapState::ResetCamera()
+{
+	camera->projectionType = Camera::ORTHOGONAL;
+	camera->rotation = Vector3f();
+	camera->SetTargetZoom(10.f, true);
+	camera->farPlane = -50.0f;
 //	
-//	Entity * mainPlayerEntity = GetMainPlayerEntity();
-//	if (mainPlayerEntity)
-//		camera->position = mainPlayerEntity->position;
-////	camera->SetRatio(Graphics.width, Graphics.height);
-//	camera->distanceFromCentreOfMovement = 10.f;
-//	// Only update before rendering.
-////	camera->Update();
-//	/// Reset what parts of the map are rendered too..!
-//	TileMap2D * map = (TileMap2D *)MapMan.ActiveMap();
-//	if (map)
-//		map->SetViewRange(20);
-//}
-//
+	Entity * mainPlayerEntity = GetMainPlayerEntity();
+	if (mainPlayerEntity)
+		camera->position = mainPlayerEntity->worldPosition;
+
+//	camera->SetRatio(Graphics.width, Graphics.height);
+	camera->distanceFromCentreOfMovement = 10.f;
+	// Only update before rendering.
+//	camera->Update();
+	/// Reset what parts of the map are rendered too..!
+	TileMap2D * map = (TileMap2D *)MapMan.ActiveMap();
+	if (map)
+		map->SetViewRange(20);
+}
+
 //// For when testing..!
 //void MapState::ReturnToEditor()
 //{
@@ -1046,9 +1048,9 @@
 //	PopMan.MakeActive(populations);
 //}
 //
-///// Bind camera to ze playah.-
-//void MapState::TrackPlayer()
-//{
-//	camera->entityToTrack = GetMainPlayerEntity();
-//	camera->trackingMode = TrackingMode::FROM_BEHIND;
-//}
+
+// Bind camera to ze playah.-
+void MapState::TrackPlayer() {
+	camera->entityToTrack = GetMainPlayerEntity();
+	camera->trackingMode = TrackingMode::FROM_BEHIND;
+}

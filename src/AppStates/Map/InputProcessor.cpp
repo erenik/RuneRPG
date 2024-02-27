@@ -1,8 +1,9 @@
 //// Emil Hedemalm
 //// 2013-06-28
-//
-//#include "MapState.h"
-//#include "Actions.h"
+
+#include "MapState.h"
+
+#include "Actions.h"
 //// Don't include all managers. Ever.
 //#include "Maps/2D/TileMap2D.h"
 //#include "Entity/EntityProperty.h"
@@ -17,8 +18,8 @@
 //#include "Graphics/Camera/Camera.h"
 //
 //
-//void MapState::InputProcessor(int action, int inputDevice/* = 0*/){
-//	/// Don't do some stuff if entering text man..
+void MapState::InputProcessor(int action, int inputDevice/* = 0*/){
+/// Don't do some stuff if entering text man..
 //	if (InputMan.IsInTextEnteringMode())
 //		return;
 //
@@ -224,5 +225,5 @@
 //		std::cout<<"\nINFO: Default case for action: "<<action<<"!";
 //		break;
 //	}
-//}
-//
+}
+

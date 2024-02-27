@@ -26,8 +26,6 @@ void RuneState::OnEnter(AppState * previousState){
 	QueueGraphics(new GMSetUIb("ExistingTemplates", GMUI::ENABLED, hasTemplates));
 	// Push the RuneScreen to the UI, so that exiting it will return us to the previous state appropriately?
 	QueueGraphics(new GMPushUI("RuneScreen"));
-	// Set graphics manager to render UI, and remove the overlay-texture.
-	QueueGraphics(new GMSet(GT_OVERLAY_TEXTURE, (Texture*)NULL));
 }
 /// Main processing function, using provided time since last frame.
 void RuneState::Process(int timeInMs){

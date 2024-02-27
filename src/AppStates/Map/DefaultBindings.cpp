@@ -1,12 +1,12 @@
 //// Emil Hedemalm
 //// 2013-06-28
-//
-//#include "MapState.h"
-//#include "Actions.h"
-//// Don't include all managers. Ever.
-//
-///// Creates bindings that are used for debugging purposes only
-//void MapState::CreateDefaultBindings(){
+
+#include "MapState.h"
+
+#include "Actions.h"
+
+// Creates bindings that are used for debugging purposes only
+void MapState::CreateDefaultBindings(){
 //	std::cout<<"\n"<<name<<"::CreateDefaultBindings() called";
 //
 ///// (int action, int * inputCombinationArray, int inputs, const char * name = NULL);
@@ -112,4 +112,5 @@
 //	/// Home- rest camera :D
 //	mapping->SetBlockingKeys(mapping->CreateBinding(RESET_CAMERA, KEY::HOME, "HOME : Reset camera"), KEY::ALT, KEY::CTRL);
 //
-//};
+};
+

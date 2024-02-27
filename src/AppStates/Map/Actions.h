@@ -6,7 +6,7 @@
 
 #include "Input/InputManager.h"
 
-enum MapActions{
+enum class MapAction {
 	NULL_ACTION,
 	GO_TO_MAIN_MENU,
 

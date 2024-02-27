@@ -12,8 +12,12 @@ void RegisterStates(){
 	//StateMan.RegisterState(new RuneGlobalState());
 	//StateMan.RegisterState(new MainMenu());
 	//StateMan.RegisterState(new RuneBattleState());
-	//StateMan.RegisterState(new MapState());
+	auto mapState = new MapState();
+	StateMan.RegisterState(mapState);
 	//StateMan.RegisterState(new RuneEditor());
 	//StateMan.RegisterState(new RuneState());
 	//StateMan.RegisterState(new CutsceneState());
+
+
+	StateMan.QueueState(mapState);
 };

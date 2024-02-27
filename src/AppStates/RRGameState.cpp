@@ -33,6 +33,8 @@
 #include "RRIntegrator.h"
 #include "Physics/Messages/PhysicsMessage.h"
 
+#include "Battle/RuneBattlerManager.h"
+
 // Static variables.
 RRSession * RRGameState::session;
 String RRGameState::playerName = DEFAULT_NAME;
@@ -44,15 +46,17 @@ RRGameState::RRGameState()
 	session = NULL;
 }
 
-/// Function when entering this state, providing a pointer to the previous StateMan.
+/// Function when entering this state, providing a pointer to the previous state.
 void RRGameState::OnEnter(AppState * previousState)
 {
+	// Previously in OnEnter.ini
+	MesMan.QueueMessages("BattleTest");
+	MesMan.QueueMessages("LoadBattle(FirstChapter/FirstRoad/2Beasts)");
+
 	QueuePhysics(new PMSet(new RRIntegrator()));
 
 	this->inputMapping.bindings.Add(CreateDefaultCameraBindings());
 
-	/// Remove overlay.
-	QueueGraphics(new GMSetOverlay(NULL));
 	zone.SetupEditCamera();
 	/// Set ambience to 1.0
 	QueueGraphics(new GMSetAmbience(Vector3f(1,1,1)));
@@ -84,6 +88,13 @@ void RRGameState::OnExit(AppState * nextState)
 void RRGameState::ProcessMessage(Message * message)
 {
 	zone.ProcessMessage(message);
+
+	const String& msg = message->msg;
+	if (msg.Contains("BattleTest") || msg.Contains("TestBattle"))
+	{
+//		BattleMan.QueueBattle("Practice");
+		StateMan.QueueState(StateMan.GetStateByID(RUNE_GAME_STATE_BATTLE_STATE));
+	}
 }
 
 

@@ -62,7 +62,7 @@ private:
 	void PlayerPositionUpdated(Vector3i position);
 
 	/// For reloading maps, looking at coordinates, etc.
-	AppWindow * mapTestWindow;
+	AppWindow * mapTestWindow = nullptr;
 
 	/// Returns the entities the players are walking around with on the map.
 	List<Entity*> GetPlayerEntities();
