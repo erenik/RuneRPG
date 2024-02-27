@@ -3,11 +3,13 @@
 /// Game state for combination of runes and rune-templates! Menu-intensive with some cool visualizations hopefully ;)
 
 #include "RuneState.h"
+
 #include "../RuneGameStatesEnum.h"
 #include "Graphics/Messages/GMUI.h"
 #include "Graphics/Messages/GMSet.h"
 #include "Graphics/GraphicsManager.h"
 #include "Message/Message.h"
+#include "StateManager.h"
 
 RuneState::RuneState(){
 	id = RUNE_GAME_STATE_RUNE_STATE;
@@ -18,14 +20,14 @@ RuneState::RuneState(){
 /// Function when entering this state, providing a pointer to the previous StateMan.
 void RuneState::OnEnter(AppState * previousState){
 	/// Load Rune UI!
-	Graphics.QueueMessage(new GMSetUI(ui));
+	QueueGraphics(new GMSetUI(ui));
 	// Check if we have any existing templates, if not grey that option out!
 	bool hasTemplates = false;
-	Graphics.QueueMessage(new GMSetUIb("ExistingTemplates", GMUI::ENABLED, hasTemplates));
+	QueueGraphics(new GMSetUIb("ExistingTemplates", GMUI::ENABLED, hasTemplates));
 	// Push the RuneScreen to the UI, so that exiting it will return us to the previous state appropriately?
-	Graphics.QueueMessage(new GMPushUI("RuneScreen", ui));
+	QueueGraphics(new GMPushUI("RuneScreen"));
 	// Set graphics manager to render UI, and remove the overlay-texture.
-	Graphics.QueueMessage(new GMSet(GT_OVERLAY_TEXTURE, (Texture*)NULL));
+	QueueGraphics(new GMSet(GT_OVERLAY_TEXTURE, (Texture*)NULL));
 }
 /// Main processing function, using provided time since last frame.
 void RuneState::Process(int timeInMs){
@@ -41,7 +43,7 @@ void RuneState::ProcessMessage(Message * message){
 			String & msg = message->msg;
 			if (msg == "OnReloadUI"){
 				// Push the RuneScreen to the UI, so that exiting it will return us to the previous state appropriately?
-				Graphics.QueueMessage(new GMPushUI("RuneScreen", ui));
+				QueueGraphics(new GMPushUI("RuneScreen"));
 			}
 			else if (msg == "AddMajor"){
 				++primary;
@@ -73,7 +75,7 @@ void RuneState::CreateUserInterface(){
 	if (ui)
 		delete ui;
 	ui = new UserInterface();
-	ui->Load("gui/RuneRPG/RuneState.gui");
+	ui->Load(nullptr, "gui/RuneRPG/RuneState.gui");
 }
 
 
@@ -81,5 +83,5 @@ void RuneState::UpdateTemplateName(){
 	String templateName = String::ToString(primary) + "P";
 	if (secondary)
 		templateName += String::ToString(secondary) + "S";
-	Graphics.QueueMessage(new GMSetUIs("TemplateName", GMUI::TEXT, templateName));
+	QueueGraphics(new GMSetUIs("TemplateName", UITarget::Text, templateName));
 }

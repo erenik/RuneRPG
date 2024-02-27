@@ -33,7 +33,7 @@ public:
 	void EnableMovement();
 
 	/// Direction the entity is walking!
-	int Direction();
+	Direction GetDirection();
 	/// Seconds per tile 
 	float movementSpeed;
 private:
@@ -60,7 +60,7 @@ private:
 	/// Movement will be queued...!
 	bool movementEnabled;
 	bool isMoving;
-	int direction, queuedDirection, previousDirection, lastQueuedDirection;
+	Direction direction, queuedDirection, previousDirection, lastQueuedDirection;
 	/// Should go from 0 to 1.0 upon completion.
 	float movementProgress;
 	Vector3f previousPosition, 

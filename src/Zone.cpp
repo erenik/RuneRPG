@@ -176,7 +176,7 @@ bool Zone::Load(String zone)
 					else if (s->hexColor == "#a4c2f4") type = NPC;
 					else if (s->hexColor == "#93c47d") type = HEALING_FOUNTAIN;
 					else if (s->hexColor == "#b4a7d6") type = EVENT;
-					else { type = NOT_ADDED_YET; LogMain("HexColor undocumented: "+s->hexColor, INFO); };
+					else { type = NOT_ADDED_YET; LogMain("HexColor undocumented: "+s->hexColor, LogLevel::INFO); };
 				}
 			}	
 			Vector3f offset;
@@ -263,8 +263,9 @@ bool Zone::Load(String zone)
 		ts = "0xAD8349";
 	else if (biome == "Forest")
 		ts = "0x007F00";
-	Entity * basePlane = MapMan.CreateEntity("Baseplane", ModelMan.GetModel(("plane")), TexMan.GetTexture(ts),  aabb.position - Vector3f(0,0.01f,0));
-	QueuePhysics(new PMSetEntity(basePlane, PT_PHYSICS_SHAPE, ShapeType::MESH));
+	Entity * basePlane = MapMan.CreateEntity("Baseplane", ModelMan.GetModel(("plane")),
+		TexMan.GetTexture(nullptr, TextureCategory::Asset, ts),  aabb.position - Vector3f(0,0.01f,0));
+	QueuePhysics(new PMSetEntity(basePlane, ShapeType::MESH));
 	QueuePhysics(new PMSetEntity(basePlane, PT_SET_SCALE, 200.f));
 	QueueGraphics(new GMSetEntitys(basePlane, GT_ENTITY_GROUP, "Tiles"));
 	
@@ -295,7 +296,7 @@ void Zone::CreatePlayer(ConstVec3fr  position)
 	playerCamera->rotation.x = Angle(PI/2);
 	playerCamera->rotation.y = 0;
 	playerCamera->projectionType = Camera::ORTHOGONAL;
-	playerCamera->zoom = 8.f;
+	playerCamera->SetTargetZoom(8.f, true);
 	playerCamera->smoothness = 0.01f;
 //	c->rotation.y = Angle();
 	playerCamera->position = Vector3f(0,2.5f,0);
@@ -307,7 +308,7 @@ void Zone::ZoneTo(String zone, ConstVec3fr dir)
 	/// Zone!
 	if (!ZoneExists(zone))
 	{
-		LogMain("Zone "+zone+" not present in dir.", INFO);
+		LogMain("Zone "+zone+" not present in dir.", LogLevel::INFO);
 		return;
 	}
 	String zoningFrom = currentZone;
@@ -500,7 +501,7 @@ void Zone::Process(int timeInMs)
 	if (InputMan.KeyPressed(KEY::U))
 	{
 		Camera * c = CameraMan.ActiveCamera();
-		c->zoom *= 1.1f;
+		c->SetTargetZoom(1.1f * c->CurrentZoom(), false);
 //		c->SetRatioF(10, 20, true); // rotation.x += Angle(0.1f);
 		Sleep(100);
 	}

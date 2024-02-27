@@ -40,7 +40,7 @@ void CutsceneState::OnEnter(AppState * previousState)
 	std::cout<<"\nEntering Cutscene state";
 
 	// TODO: Maybe create some ui to show cut-scenes entirely in this state instead? o.o .. or?
-	Graphics.EnableAllDebugRenders(false);
+//	QueueGraphics .EnableAllDebugRenders(false);
 	paused = false;
 	/* 
 	// Begin loading textures here for the UI
@@ -125,7 +125,7 @@ void CutsceneState::ProcessMessage(Message * message){
 void CutsceneState::Pause()
 {
 	// Push the cut-scene menu.
-	Graphics.QueueMessage(new GMPushUI("CutsceneMenu", GlobalUI()));
+	QueueGraphics(new GMPushUI("CutsceneMenu"));
 	scriptsPaused = ScriptMan.PauseAll();
 	TrackMan.Pause();
 	paused = true;
@@ -134,7 +134,7 @@ void CutsceneState::Pause()
 void CutsceneState::Resume()
 {
 	// Pop the cut-scene menu.
-	Graphics.QueueMessage(new GMPopUI("CutsceneMenu", GlobalUI()));
+	QueueGraphics(new GMPopUI("CutsceneMenu", GlobalUI()));
 	ScriptMan.ResumeScripts(scriptsPaused);
 	TrackMan.Resume();
 	paused = false;

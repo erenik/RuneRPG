@@ -46,16 +46,17 @@ void RuneEntity::Spawn(ConstVec3fr atPosition)
 	String texture = "img/Smile.png";
 	if (isNpc)
 		texture = "img/SmileNPC.png";
-	graphicalEntity = EntityMan.CreateEntity(baseName + "_Graphical", ModelMan.GetModel("plane"), TexMan.GetTexture(texture));
+	graphicalEntity = EntityMan.CreateEntity(baseName + "_Graphical", ModelMan.GetModel("plane"),
+		TexMan.GetTextureByName(TextureCategory::Asset, texture));
 	graphicalEntity->inheritPositionOnly = true;
 	physicsEntity->AddChild(graphicalEntity);
 
-	MapMan.AddEntity(physicsEntity, false, true);
-	MapMan.AddEntity(graphicalEntity, true, false);
+	MapMan.AddEntity(physicsEntity, false);
+	MapMan.AddEntity(graphicalEntity, true);
 		
 	PhysicsQueue.Add(
-		new PMSetEntity(physicsEntity, PT_PHYSICS_SHAPE, ShapeType::SPHERE),
-		new PMSetEntity(physicsEntity, PT_PHYSICS_TYPE, PhysicsType::DYNAMIC),
+		new PMSetEntity(physicsEntity, ShapeType::SPHERE),
+		new PMSetEntity(physicsEntity, PT_PHYSICS_TYPE, (int)PhysicsType::Dynamic),
 		new PMSetEntity(physicsEntity, PT_SET_SCALE, 0.35f),
 		new PMSetEntity(physicsEntity, PT_LINEAR_DAMPING, 0.5f),
 		new PMSetEntity(physicsEntity, PT_RESTITUTION, 0.0f));

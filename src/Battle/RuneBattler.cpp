@@ -3,6 +3,7 @@
 /// A battler in a the RuneRPG battles!
 
 #include "RuneBattler.h"
+
 #include <cmath>
 #include <fstream>
 #include <cstring>
@@ -29,6 +30,7 @@
 #include "MathLib/Function.h"
 #include "BattleStats.h"
 #include "Item/ItemTypes.h"
+#include "StateManager.h"
 
 RuneBattler::RuneBattler()
 {
@@ -113,13 +115,13 @@ void RuneBattler::CreateEntity()
 	Texture * tex;
 	if (isEnemy)
 	{
-		tex = TexMan.GetTexture("White");
+		tex = TexMan.GetTextureByName(TextureCategory::Asset, "White");
 		model = ModelMan.GetModel("obj/Sprite.obj");
 	}
 	// Player! Face 'em leftward!
 	else 
 	{
-		tex = TexMan.GetTexture("Red");
+		tex = TexMan.GetTextureByName(TextureCategory::Asset, "Red");
 		model = ModelMan.GetModel("obj/SpriteMirroredUVs.obj");
 	}
 	/// o.o
@@ -127,11 +129,11 @@ void RuneBattler::CreateEntity()
 	
 	/// Give it animation set if applicable.
 	if (animationSet.Length())
-		Graphics.QueueMessage(new GMSetEntity(entity, GT_ANIMATION_SET, animationSet));
+		QueueGraphics(new GMSetEntity(entity, GT_ANIMATION_SET, animationSet));
 	/// Give a default animation set to those lacking one.
 	else 
 	{
-		Graphics.QueueMessage(new GMSetEntity(entity, GT_ANIMATION_SET, "anim/Battle/SwordSlasher"));		
+		QueueGraphics(new GMSetEntity(entity, GT_ANIMATION_SET, "anim/Battle/SwordSlasher"));
 	}
 	/// Scale it.
 	Physics.QueueMessage(new PMSetEntity(entity, PT_SET_SCALE, 2.f));
@@ -825,7 +827,7 @@ void RuneBattler::OnKO()
 	if (entity)
 	{
 		// Make it invisible!
-		Graphics.QueueMessage(new GMSetEntityb(entity, GT_VISIBILITY, false));
+		QueueGraphics(new GMSetEntityb(entity, GT_VISIBILITY, false));
 	}
 }
 

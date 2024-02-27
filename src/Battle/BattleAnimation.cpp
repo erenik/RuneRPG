@@ -3,10 +3,12 @@
 /// An animation, which controls rendered entities on the screen as a spell is being animated, or controls particles effects or w/e is needed.
 
 #include "BattleAnimation.h"
+
 #include "RuneBattleAction.h"
 #include "RuneBattler.h"
 #include "Graphics/GraphicsManager.h"
 #include "Graphics/Messages/GMAnimate.h"
+#include "StateManager.h"
 
 BattleAnimation::BattleAnimation()
 {
@@ -41,7 +43,7 @@ void BattleAnimation::Process(int timeInMs)
 			for (int i = 0; i < targetEntities.Size(); ++i)
 			{
 				Entity * entity = targetEntities[i];
-				Graphics.QueueMessage(new GMPlayAnimation(spriteAnimationName, entity));
+				QueueGraphics(new GMPlayAnimation(spriteAnimationName, entity));
 			}
 			break;
 		}

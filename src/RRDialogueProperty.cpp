@@ -3,11 +3,14 @@
 /// Dialogue property for entities in the RuneRPG game.
 
 #include "RRDialogueProperty.h"
+
 #include "Message/Message.h"
 #include "UI/UIElement.h"
+#include "UI/UILabel.h"
 #include "StateManager.h"
 #include "Graphics/Messages/GMUI.h"
 #include "Message/MessageManager.h"
+#include "Color.h"
 
 int Dialogue::idEnumerator = 0;
 UIElement * box = 0;
@@ -19,10 +22,10 @@ void DisplayDialogueBox()
 	if (box == 0)
 	{
 		box = new UILabel(DIALOGUE_BOX);
-		box->sizeRatioX = 1;
-		box->sizeRatioY = 0.2f;
-		box->alignmentY = box->sizeRatioY * 0.5f;
-		box->text.color = Color(255,255,255,255);
+		box->layout.sizeRatioX = 1;
+		box->layout.sizeRatioY = 0.2f;
+		box->layout.alignmentY = box->layout.sizeRatioY * 0.5f;
+		box->SetTextColor(Color::FromUChar(255, 255, 255, 255));
 		box->removeOnPop = true;
 	}
 //	box = UserInterface::LoadUIAsElement("gui/DialogueBox.gui");
@@ -37,7 +40,7 @@ void HideDialogueBox()
 
 void SetDialogueText(String str)
 {
-	QueueGraphics(new GMSetUIs(DIALOGUE_BOX, GMUI::TEXT, str));
+	QueueGraphics(new GMSetUIs(DIALOGUE_BOX, UITarget::Text, str));
 }
 
 /// DialoguePart -------------------------

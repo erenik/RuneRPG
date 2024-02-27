@@ -3,6 +3,7 @@
 /// Tiles.
 
 #include "RRTileProperty.h"
+
 #include "Entity/EntityManager.h"
 #include "Zone.h"
 #include "XML/XMLParser.h"
@@ -26,6 +27,7 @@
 #include "File/FileUtil.h"
 #include "File/LogFile.h"
 #include "Random/Random.h"
+#include "Texture.h"
 
 Random tileRand;
 List<String> biomes;
@@ -122,7 +124,7 @@ void RRTileProperty::SpawnEntities()
 		case ZONE_INTO_BUILDING: texture = "0xFFAAAA"; break;
 		case HEALING_FOUNTAIN: texture = "0x00FFFFFF"; break;
 		default: 
-			LogMain("Default texture for tile of type "+String(type), INFO);
+			LogMain("Default texture for tile of type "+String(type), LogLevel::INFO);
 			texture = "0xFF0000FF"; break;
 	}
 
@@ -130,12 +132,12 @@ void RRTileProperty::SpawnEntities()
 	Entity * entity = EntityMan.CreateEntity("ij", ModelMan.GetModel((walkable? "plane" : "cube")), 0);
 	entity->SetPosition(position);
 	entity->properties.AddItem(this);
-	MapMan.AddEntity(entity, false, true);
+	MapMan.AddEntity(entity, false);
 
 	/// Graphics entity.
 	if (texture.Length())
 	{
-		Texture * tex = TexMan.GetTexture(texture);
+		Texture * tex = TexMan.GetTextureByName(TextureCategory::Asset, texture);
 		Vector2f scale = Vector2f(tex->size) / 64.0f;
 		scale.Clamp(1.f, 5.f);
 		Entity * graphicalEntity = EntityMan.CreateEntity("ij", ModelMan.GetModel("plane"), tex);
@@ -146,14 +148,14 @@ void RRTileProperty::SpawnEntities()
 		QueueGraphics(new GMSetEntityb(graphicalEntity, GT_IS_ALPHA_ENTITY, true));
 		if (!isProperTexture)
 			QueueGraphics(new GMSetEntitys(graphicalEntity, GT_ENTITY_GROUP, "Tiles"));
-		MapMan.AddEntity(graphicalEntity, true, false);
+		MapMan.AddEntity(graphicalEntity, true);
 		/// only create if needed? or rather, skip adding the pr
 		this->owners.Add(entity, graphicalEntity);
 	}
 	else 
 		this->owner = entity;
 
-	QueuePhysics(new PMSetEntity(entity, PT_PHYSICS_SHAPE, ShapeType::MESH));
+	QueuePhysics(new PMSetEntity(entity, PhysicsShape::MESH));
 	switch(type)
 	{
 		case ZONE:

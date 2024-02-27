@@ -2,6 +2,7 @@
 /// 2013-10-10
 
 #include "RuneBattleAction.h"
+
 #include "RuneBattler.h"
 #include "BattleStats.h"
 #include "BattleAnimation.h"
@@ -20,6 +21,7 @@
 
 #include "File/File.h"
 #include "Random/Random.h"
+#include "StateManager.h"
 
 Random random;
 
@@ -166,7 +168,7 @@ void RuneBattleAction::EvaluateLine(String line)
 			Entity * entity = subject->entity;
 			if (!entity)
 				return;
-			Graphics.QueueMessage(new GMQueueAnimation(animation, entity));
+			QueueGraphics(new GMQueueAnimation(animation, entity));
 		}
 	}
 	else if (s.Contains("PhysicalDamage("))
@@ -215,7 +217,7 @@ void RuneBattleAction::Damage(String line)
 /// Send to battle narrator.
 void RuneBattleAction::Narrate(String line)
 {
-	Graphics.QueueMessage(new GMSetUIs("Narrator", GMUI::TEXT, line));
+	QueueGraphics(new GMSetUIs("Narrator", UITarget::Text, line));
 }
 
 /// Checks for a name and stuff.

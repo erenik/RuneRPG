@@ -107,7 +107,7 @@ void RRPathingProperty::ProcessMessage(Message * message)
 
 	if (message->msg == "RRMovingProperty::DistanceMovedZero")
 	{
-		LogMain(owner->name+" distance moved zero. Restarting pathing", DEBUG);
+		LogMain(owner->name+" distance moved zero. Restarting pathing", LogLevel::DEBUG);
 		/// Just issue Stop() again?
 		Do();
 //		Go();
@@ -124,7 +124,7 @@ void RRPathingProperty::ProcessMessage(Message * message)
 				Go();
 			if (message->msg == "RRMovingProperty::DistanceMovedZero")
 			{
-				LogMain(owner->name+" distance moved zero. Restarting pathing", DEBUG);
+				LogMain(owner->name+" distance moved zero. Restarting pathing", LogLevel::DEBUG);
 				Go();
 			}
 			break;

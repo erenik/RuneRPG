@@ -22,6 +22,7 @@
 
 #include "Pathfinding/PathfindingProperty.h"
 #include "Script/ScriptManager.h"
+#include "StateManager.h"
 
 const float RREntityState::DEFAULT_MOVEMENT_SPEED = 0.25f;
 
@@ -34,7 +35,7 @@ RREntityState::RREntityState(Entity * entity)
 	timePassedSinceLastMovement = 0;
 	left = right = up = down = false;
 	isMoving = false;
-	direction = queuedDirection = Direction::NONE;
+	direction = queuedDirection = Direction::NO_DIRECTION;
 	movementProgress = 0.0f;
 	movementEnabled = true;
 };
@@ -140,8 +141,8 @@ Vector2i RREntityState::GetInteractionTile()
 	int tileX = pos.x;
 	int tileY = pos.y;
 
-	int dir = lastQueuedDirection;
-	if (dir == Direction::NONE)
+	Direction dir = lastQueuedDirection;
+	if (dir == Direction::None)
 		dir = previousDirection;
 	switch(dir){
 		case Direction::LEFT:
@@ -173,12 +174,12 @@ void RREntityState::UpdateQueuedMovement()
 	else if (down)
 		queuedDirection = Direction::DOWN;
 	else
-		queuedDirection = Direction::NONE;
+		queuedDirection = Direction::None;
 	/// If we have moment?
-	if (queuedDirection != Direction::NONE){
+	if (queuedDirection != Direction::None){
 		lastQueuedDirection = queuedDirection;
 		// Inform the Physics/Pathfinder of it!
-		Graphics.QueueMessage(new GMSetEntity(owner, GT_ANIMATION, "Walk"));
+		QueueGraphics(new GMSetEntity(owner, GT_ANIMATION, "Walk"));
 	}
 	/// And not?
 	else {
@@ -201,7 +202,7 @@ void RREntityState::HandleMovement(int timePassedInMs)
 			movementProgress = 1.0f;
 			isMoving = false;
 			previousDirection = direction;
-			direction = Direction::NONE;
+			direction = Direction::None;
 			TileMap2D * map = (TileMap2D*)MapMan.ActiveMap();
 			Vector3f pos = owner->worldPosition;
 			pos.Round();
@@ -222,7 +223,7 @@ void RREntityState::HandleMovement(int timePassedInMs)
 	}
 	
 	/// If we reached next tile, see if we got a queued direction and occupy that next tile if possible and if so! :)
-	if (direction == Direction::NONE && queuedDirection != Direction::NONE){
+	if (direction == Direction::None && queuedDirection != Direction::None){
 		// Check if tile is vacant and walkable, if so move to it.
 		Vector3f pos = owner->worldPosition;
 //		std::cout<<"\nPosition: "<<pos;
@@ -315,8 +316,8 @@ void RREntityState::HandleMovement(int timePassedInMs)
 	//	}
 	}
 	// No queued movement and no current movement = stand still!
-	else if (direction == Direction::NONE && queuedDirection == Direction::NONE){
-		Graphics.QueueMessage(new GMSetEntity(owner, GT_ANIMATION, "Idle"));
+	else if (direction == Direction::None && queuedDirection == Direction::None){
+		QueueGraphics(new GMSetEntity(owner, GT_ANIMATION, "Idle"));
 	}
 	/// Walk more if we had stuff remaining, yo.
 	if (timeRemainingAfterReachingDestination > 0){

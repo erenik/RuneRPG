@@ -19,7 +19,7 @@ void SetApplicationDefaults()
 	/// This should correspond to the directory name of the released application's final install.
 	FilePath::workingDirectory = "RuneRPG";
 	MapManager::rootMapDir = "map/";
-	UIElement::defaultTextureSource = "80Gray50Alpha.png";
+	UIVisuals::defaultTextureSource = "80Gray50Alpha.png";
 	/*
 	*/
 }
