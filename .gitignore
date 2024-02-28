@@ -7,3 +7,7 @@ bin/Win64/
 bin/anim/
 bin/dae/
 bin/data/
+bin/RuneRPG/
+bin/log/
+bin/output/
+bin/startup.ini

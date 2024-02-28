@@ -98,10 +98,29 @@ void MapState::OnEnter(AppState * previousState) {
 	// Set physics integrator to simple!
 	Integrator* integrator = new NoIntegrator();
 	QueuePhysics(new PMSet(integrator));
-//
-//	Graphics.render
-//
-//
+
+	Viewport * mainViewport = MainWindow()->MainViewport();
+	mainViewport->renderAI = false;
+	mainViewport->renderNavMesh = false;
+	mainViewport->renderGrid = true;
+	mainViewport->renderNavMesh = true;
+	mainViewport->renderPhysics = true;
+	mainViewport->renderFPS = true;
+	mainViewport->renderLights = false;
+
+
+	// Create a plane.
+	MapMan.CreateEntity("Plane", CreationSettings(true, "plane.obj", "0xff0000ff", Vector3f(), 10.f));
+
+	// Create player
+
+	// Create a shop
+
+	// Add some monsters
+
+	// Play!
+
+
 	/// For reloading maps, looking at coordinates, etc.
 	if (!mapTestWindow)
 	{
@@ -188,8 +207,8 @@ void MapState::OnEnter(AppState * previousState) {
 
 	auto mainWindow = WindowMan.MainWindow();
 	/// Toggle debug renders
-	Viewport * mainViewport = mainWindow->MainViewport();
-	mainViewport->EnableAllDebugRenders(false);
+	mainViewport = mainWindow->MainViewport();
+	mainViewport->EnableAllDebugRenders(true);
 	mainViewport->renderFPS = true;
 //	Graphics.selectionToRender = NULL;
 	mainViewport->renderNavMesh = true;
