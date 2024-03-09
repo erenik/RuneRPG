@@ -1,0 +1,98 @@
+// UI creation & parsing guide, By Emil Hedemalm 2013-03-28
+// ============================
+// <-- This is a comment
+
+/* <-- This marks the beginning of a long comment...	
+	...and this marks the end of a long comment --> */
+	
+// Set default values, these may be omitted and/or reset 
+// at any point later if wanted. See below for their usage.
+defaultAlignment 	NULL_ALIGNMENT
+defaultTexture		80Gray.png
+defaultParent		root			
+defaultScalability	true
+// The following will catenate the RuneRPG folder before the actual texture paths are used..! ^^
+defaultRootFolder	RuneRPG
+defaultTextColor	1 1 1 1
+defaultFont			font2
+
+root							// Makes root active for manipulation, 
+
+
+
+// =======================================
+//// Left column with debug stuff
+list		LeftColumn
+AddTo	root
+
+defaultSizeRatioY	0.10
+defaultParent LeftColumn
+
+button	EndBattle
+button	ReloadButton
+text	"Reload battle source"
+onActivate	ReloadBattle()
+button	PauseButton
+text	"Pause"
+onActivate	PauseBattle()
+button	OpenBattle
+text	"Open Battle..."
+button	ReloadBattlers
+text	"Reload battlers"
+onActivate	ReloadBattlers
+button	ReloadBattleActions
+text	"Reload battle actions"
+onActivate	ReloadBattleActions
+button	ResetBattlers
+button RenderNavMesh
+button EditActiveBattlers
+text	"Edit active battlers"
+onActivate	PushUI(ActiveBattlersList)&UpdateActiveBattlersList(ActiveBattlersList)
+button AddBattler
+text	"Add battler"
+onActivate PushUI(AddBattlerMenu)&UpdateBattlersList(BattlersList)
+
+
+/// Meny for adding battlers to either side.
+list AddBattlerMenu
+texture	0x33
+sizeRatioXY 1 1
+visible false
+AddTo root
+
+parent AddBattlerMenu
+label	"Add battler"
+list BattlersList
+texture	0x33
+sizeRatioY 0.65
+
+RadioButtons	2 AddBattlerSide
+texts	"To Enemy Side" "Replace player"
+button	RemoveAllEnemies
+text	"Remove all enemies"
+
+
+/// For selecting a battler to edit.
+list ActiveBattlersList
+texture	0x33
+sizeRatioXY 1 1
+visible false
+AddTo root
+
+/// For editing a battler
+list ActiveBattlerStats
+texture	0x33
+sizeRatioXY 1 1
+visible false
+AddTo root
+
+
+
+
+
+
+
+
+
+
+

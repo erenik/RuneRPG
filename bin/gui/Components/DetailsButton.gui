@@ -1,0 +1,17 @@
+
+DependsOn Colors
+DependsOn Textures
+DependsOn Sizes
+
+root Button
+textAlignment Center
+textSize $TextSizeSmall
+textColor $TextColorButton
+sizeRatioXY 0.3 0.8
+texture img/icons/Info.png
+retainAspectRatio true
+text ""
+
+// Old setup
+//3slice $3SliceButton
+//text "Details"

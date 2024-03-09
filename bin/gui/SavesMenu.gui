@@ -1,0 +1,19 @@
+/// Saves menu as it is presented in the main menu (not mid-game)
+
+root
+name	SavesMenu
+
+defaultTextColor	1 1 1 1
+defaultTexture		black50Alpha.png
+defaultSizeRatioXY	1 1
+defaultAlignmentXY	0.5 0.5
+
+parent	SavesMenu
+
+label	"Saves menu"
+label	SavesMenuActionLabel
+text	"Load game?"
+
+label	"Saves"
+
+list	SavesList

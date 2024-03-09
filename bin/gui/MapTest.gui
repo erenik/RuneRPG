@@ -1,0 +1,27 @@
+// UI creation & parsing guide, By Emil Hedemalm 2013-03-28
+// ============================
+// <-- This is a comment
+
+/* <-- This marks the beginning of a long comment...	
+	...and this marks the end of a long comment --> */
+	
+// Set default values, these may be omitted and/or reset 
+// at any point later if wanted. See below for their usage.
+defaultAlignment 	NULL_ALIGNMENT
+defaultTexture		80gray50Alpha.png	
+defaultParent		root			
+defaultScalability	true
+// The following will catenate the RuneRPG folder before the actual texture paths are used..! ^^
+defaultTextColor	1 1 1 1
+
+root							// Makes root active for manipulation, 
+
+
+List	DebugList
+
+parent DebugList
+
+defaultSizeRatioY 0.1
+VectorInput	2 Position
+FloatInput	TotalEncounterRatio
+button	ReloadPopulations

@@ -1,0 +1,30 @@
+
+Variable ParchmentWide img/ui/ParchmentWide
+Variable DefaultButton img/ui/ButtonRadio
+Variable RadioButton img/ui/ButtonRadio
+
+Variable Main9Slice img/ui/Main9Slice_240_textured
+Variable Opaque9S240 img/ui/Main9Slice_240_opaque_textured
+Variable Dark9Slice img/ui/Dark9Slice_120x120
+Variable 9SliceMain img/ui/Main9Slice_120x120
+Variable 9SliceDark img/ui/Dark9Slice_120x120
+Variable 9SliceDarkAlpha img/ui/120x120_NineSlice_transparency
+
+Variable Button9Slice img/ui/TestNineSlicebutton1
+Variable Button9SliceDark img/ui/TestNineSlicebutton2
+Variable Button9SliceDarkSmall img/ui/Button9SliceDark_60x60
+Variable 3SliceButton img/ui/3SliceButton
+Variable 3SliceButtonDark img/ui/3SliceButtonDark.png
+Variable 3SliceButtonDarkActive img/ui/3SliceButtonDark_Active.png
+Variable 3SliceButtonClean img/ui/3SliceButton_Clean
+Variable 3SliceInput img/ui/3Slice_Input_Bg.png
+Variable 3SliceInputActive img/ui/3Slice_Input_Bg_Active
+Variable 3SliceDivider img/ui/3SliceDivider
+Variable 3SliceTextBG img/ui/3SliceTextBG
+
+Variable 3SliceDropdown img/ui/3SliceDropdown.png
+Variable 3SliceDropdownActive img/ui/3SliceDropdown_Active.png
+Variable 3SliceDropdownDark img/ui/3SliceDropdownDark.png
+
+Variable 3SliceProgressBarFrame img/ui/ProgressBar/Frame3Slice
+Variable 3SliceHPBarFrame img/ui/HPBar/Frame

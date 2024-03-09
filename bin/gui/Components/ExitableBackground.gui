@@ -1,0 +1,10 @@
+
+root Button
+name ExitableBackground
+exitable false
+onActivate PopTopmostUI
+onClick PopTopmostUI
+hoverable true
+text ""
+
+parent ExitableBackground

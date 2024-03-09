@@ -1,0 +1,10 @@
+// Generic dropdown entry button.
+
+DependsOn All3
+
+root Button
+name DropDownEntry
+3slice $3SliceButton
+textAlignment Center
+textSize $TextSizeButton
+textColor $TextColorButton

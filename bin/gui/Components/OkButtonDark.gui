@@ -1,0 +1,16 @@
+
+DependsOn Colors
+DependsOn Sizes
+DependsOn Textures
+
+defaultTextColor $TextColorButton
+
+root Button
+name OK
+text OK
+sizeRatioXY 0.2 0.1
+textAlignment Center
+textSize $TextSizeButton
+3slice $3SliceButtonDark
+onHover3Slice $3SliceButtonDarkActive
+textColor $TextColorButtonBright

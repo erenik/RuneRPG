@@ -1,0 +1,23 @@
+
+DependsOn Colors
+
+defaultTextColor $TextColorLabel
+
+root ColumnList
+name clWoods
+
+parent clWoods
+defaultSizeRatioXY 1 1
+
+Label Plains
+sizeRatioX 0.6
+
+Image WoodsIcon
+sizeRatioX 0.2
+texture img/icons/TileTypes/Plains
+retainAspectRatio true
+
+Image WoodsIcon2
+sizeRatioX 0.2
+texture img/icons/ImprovementStatistic/PlainsFoodProduction
+retainAspectRatio true

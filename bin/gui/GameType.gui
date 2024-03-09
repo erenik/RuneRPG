@@ -1,0 +1,31 @@
+/// New game... Load game?
+
+root
+name	GameType
+
+/// Cancel hosting the session if the user presses escape ?
+onExit	CancelGame
+
+defaultTextColor	1 1 1 1
+defaultTexture		black50Alpha.png
+defaultSizeRatioXY	1 1
+defaultAlignmentXY	0.5 0.5
+
+parent	GameType
+
+
+// Cover all underlying ui
+List GameTypeScreen
+text	"Game type Screen"
+texture	Black
+TextColor	1 1 1 0.1
+
+
+parent	GameTypeScreen
+defaultSizeRatioY	0.1
+
+label	"Select game type"
+button	"New game"
+onActivate	SetGameType(New)&PopUI(GameType)
+button	"Load game"
+onActivate	PushUI(gui/SavesMenu.gui)&PrepareForLoadGame&LoadSavesList(SavesList)

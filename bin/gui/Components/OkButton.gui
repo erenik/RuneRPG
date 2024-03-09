@@ -1,0 +1,12 @@
+
+DependsOn Colors
+DependsOn Sizes
+
+defaultTextColor $TextColorButton
+
+root Button
+name OK
+text OK
+sizeRatioXY 0.2 0.1
+textAlignment Center
+textSize $TextSizeButton

@@ -56,6 +56,9 @@ public:
 
 private:
 
+	void Attack();
+	void Block();
+
 	int stepsTakenAfterZoning;
 	int stepsSinceLastBattle;
 	/// Evaluate if we should trigger some kinda battle.
@@ -114,7 +117,6 @@ private:
 	int enterMode;
 
 	/// The cameras for the 4 primary players and spectators...!
-	Camera * camera;
 	Vector3i cursorPosition;
 };
 

@@ -1,0 +1,23 @@
+
+root
+name	LightingMenu
+
+defaultTextColor	1 1 1 1
+defaultTexture		80Gray50Alpha.png
+
+parent	LightingMenu
+
+list	ContentsObjects
+
+defaultParent	ContentsObjects
+defaultSizeRatioXY	1 0.1
+
+VectorInput	3 GlobalAmbient
+text	"Ambient"
+
+label	"Map lights"
+list 		MapLights
+sizeRatioY 	0.7
+text 		"Map lights"
+textColor	1 1 1 0.1
+

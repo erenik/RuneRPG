@@ -1,0 +1,30 @@
+
+DependsOn Colors
+DependsOn Textures
+DependsOn Sizes
+
+root ColumnList
+name clServerGameSpeed
+
+parent clServerGameSpeed
+
+defaultSizeRatioXY 0.3 1
+defaultTextColor $TextColorLabel
+
+defaultTextSize $TextSizeSmall
+
+Image IconGameSpeed
+texture img/icons/RecruitmentTime
+sizeRatioX 0.1
+retainAspectRatio true
+
+defaultTextAlignment Center
+
+IntegerLabel ServerGameSpeed
+text ServerGameSpeed
+sizeRatioX 0.77
+dividerX 0.75
+onHover Tooltip.ServerGameSpeed
+
+defaultTextColor $TextColorButton
+defaultSizeRatioX 0.12

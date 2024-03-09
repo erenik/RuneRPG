@@ -1,0 +1,36 @@
+/// Main menu for the editor-state.
+
+root
+name	SizeMenu
+exitable	true
+
+defaultTextColor	1 1 1 1
+defaultTexture	80Gray50Alpha.png
+
+// Base menu for returning to main menu, saving, loading, etc.
+list CommandsSize
+onExit		NavigateUI(false);
+AddTo	root
+
+// Base menu for returning to main menu, saving, loading, etc.
+defaultParent		CommandsSize
+defaultSizeRatioX	1
+defaultSizeRatioY	0.1
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Define the contents of the Tiles-menus!
+defaultParent	CommandsSize
+
+label	"Map Size Commands"
+label	CurrentSize
+VectorInput	2 NewMapSize
+text	"New Size XY"
+
+label 	EffectsX
+label	EffectsY
+
+button	ApplyNewSize
+label 	TilesInLevel
+
+AddTo	CommandsSize
+

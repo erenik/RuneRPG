@@ -1,0 +1,9 @@
+
+DependsOn Colors
+
+root Label
+name LoadingData
+text LoadingData
+textAlignment Center
+textColor $TextColorLabel
+sizeRatioY 0.1

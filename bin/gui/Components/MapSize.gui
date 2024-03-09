@@ -1,0 +1,43 @@
+
+DependsOn Colors
+DependsOn Textures
+
+defaultTextColor $TextColorButton
+
+// Always use a base element as root, add DDM as immediate child
+root
+name MapSizeComponent
+
+parent MapSizeComponent
+
+DropDownMenu MapSize
+sizeRatioXY 1 1
+dividerX 0.6
+textAlignment Center
+3slice $3SliceDropdown
+onHover3Slice $3SliceDropdownActive
+text MapSize
+
+/// Map sizes
+parent MapSize
+default3slice $3SliceButton
+defaultTextAlignment Center
+defaultSizeRatioXY 1 0.1
+
+// Square maps
+Button 5x5
+Button 10x10
+Button 15x15
+Button 20x20
+Button 30x30
+Button 40x40
+
+// Wider maps
+Button 30x20
+Button 40x30
+Button 50x40
+
+// even more wider maps
+Button 40x20
+Button 50x30
+Button 60x40

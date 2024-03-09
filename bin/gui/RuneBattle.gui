@@ -1,0 +1,82 @@
+// UI creation & parsing guide, By Emil Hedemalm 2013-03-28
+// ============================
+// <-- This is a comment
+
+/* <-- This marks the beginning of a long comment...	
+	...and this marks the end of a long comment --> */
+	
+// Set default values, these may be omitted and/or reset 
+// at any point later if wanted. See below for their usage.
+defaultAlignment 	NULL_ALIGNMENT
+defaultTexture		80gray50Alpha.png
+defaultParent		root			
+defaultScalability	true
+// The following will catenate the RuneRPG folder before the actual texture paths are used..! ^^
+defaultRootFolder	RuneRPG
+defaultTextColor	1 1 1 1
+defaultFont			font2
+
+root							// Makes root active for manipulation, 
+
+
+parent root
+
+// =======================================
+/// Left Column end
+defaultParent	root
+defaultSizeRatioY	1
+
+element		Narrator
+sizeRatioY	0.06
+alignmentY	0.28
+text		"Narrator."
+
+// =======================================
+element		HelpText
+alignmentY	0.95
+sizeRatioY	0.1
+text		"Help Text"
+
+list		Log
+visible false
+textSize	0.1
+sizeRatioXY	1 0.6
+alignmentXY	0.5 0.6	
+AddTo		root
+
+
+// =======================================
+columnList		BottomBar
+alignmentY	0.125
+sizeRatioY	0.25
+
+list		PartyStatus
+textColor	1 1 1 0.1
+text		"Party status"
+textSize	0.2
+alignmentX	0.25
+sizeRatioX	0.5
+AddTo		BottomBar
+
+element		BattleMenus
+text		"Commands"
+textColor	1 1 1 0.02
+textSize	0.2
+alignmentX	0.4	
+sizeRatioX	0.2
+AddTo		BottomBar
+
+/// Create all sub-menu parts within
+defaultParent BattleMenus
+list		CommandsMenu
+exitable	false		/// First menu should not be exitable via Esc!
+list 		SubCommandMenu
+texture		Grey
+visible		false
+list		TargetsMenu
+onExit		SetTargetBattlers(none)
+texture		Grey
+visible		false
+AddTo		BattleMenus
+
+

@@ -1,0 +1,29 @@
+/// Tile menu!
+
+root
+name	TerrainSelector
+exitable	true
+
+defaultTextColor	1 1 1 1
+defaultTexture	80Gray50Alpha.png
+
+parent	TerrainSelector
+list 	ContentsTiles
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Define the contents of the Tiles-menus!
+defaultParent		CommandsTiles
+defaultSizeRatio	1	0.1
+
+label	TileCommands
+
+
+
+defaultParent	ContentsTiles
+defaultSizeRatioXY	1 0.2
+
+label		"Terrain types"
+list 		TerrainTypes
+sizeRatioY 	0.7
+text 		"Terraintypes list"
+textColor 	1 1 1 0.1

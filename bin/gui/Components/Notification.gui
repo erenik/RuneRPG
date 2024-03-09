@@ -1,0 +1,19 @@
+
+DependsOn Sizes
+DependsOn Colors
+DependsOn Textures
+
+root
+name Notification
+
+parent Notification
+
+Label Text
+9slice $Main9Slice
+textSize $TextSizeContent
+sizeRatioXY 0.1 0.1
+alignmentXY 0.5 0.05
+textAlignment Center
+
+
+

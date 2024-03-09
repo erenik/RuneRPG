@@ -1,0 +1,150 @@
+
+DependsOn All3
+
+defaultTextColor $TextColorButton
+DefaultFont data/fonts/Roboto-Regular.ttf
+
+root
+name MapState
+
+parent MapState
+
+Element HUD
+
+List lButtonsDebug
+sizeRatioXY 0.2 0.2
+alignmentXY 0.1 0.5
+
+columnList	MainMenu
+visible		false
+exitable	true
+onExit		MenuClosed&NavigateUI(false)
+
+Label Announcement
+sizeRatioXY 0.5 0.5
+alignmentXY 0.5 0.2
+textAlignment Center
+textSize $TextSizeHeader
+textColor $TextColorLabel
+visible false
+
+
+/////
+parent HUD
+
+List lTopLeftStats
+sizeRatioXY 0.2 0.4
+alignmentXY 0.1 0.8
+9slice $Main9Slice
+
+defaultSizeRatioXY 0.9 0.1
+defaultTextColor $TextColorLabel 
+
+parent lTopLeftStats
+IntegerLabel HP
+textColor 0xff0000ff
+IntegerLabel Fatigue
+textColor 0xffff00ff
+IntegerInput Speed
+
+IntegerLabel Level
+IntegerLabel EXP
+IntegerLabel STR
+IntegerLabel VIT
+IntegerLabel AGI
+IntegerLabel Attack
+IntegerLabel Defense
+
+
+//////
+parent lButtonsDebug
+defaultSizeRatioXY 0.95 0.2
+
+Button CenterCamera
+3Slice $3SliceButton
+
+
+
+/// Add lefties
+/////////////////////////////////////////////////////////////////
+parent MainMenu
+
+element Content
+textColor	1 1 1 0.1
+text		"Lefty "
+sizeRatioX	0.7
+
+parent	Content
+list ItemMenu
+element	StatusScreen
+visible	false
+text	"Status"
+
+
+/// Item sub-menu
+parent	ItemMenu
+ColumnList	ItemTopBar
+sizeRatioY	0.1
+List	ItemList
+sizeRatioY	0.8
+
+parent	ItemTopBar
+defaultSizeRatioXY 0.2 1
+button	Use
+button	Sort
+button	OpenTestShop
+text	"Buy"
+
+
+/// =============================
+// Save-screen
+list SaveScreen
+padding	0.05
+visible false
+
+////////////////////////
+parent SaveScreen
+
+label	SavesLabel
+sizeRatioY	0.1
+text	"Save screen yow"
+
+list SavesList
+sizeRatioY	0.8
+
+
+
+/// Add options to the menu list.
+/////////////////////////////////////////////////////////////////
+parent MainMenu
+
+list MenuList
+// text		"Right"
+sizeRatioX	0.3
+sizeRatioY	1.0
+padding		0.005
+
+defaultSizeRatioXY	1 0.095
+
+parent MenuList
+
+button Status
+button Equipment
+button Item
+button Runes
+onActivate	EnterState(RuneState)
+button Journal
+button Save
+onActivate	ListSaves(SavesList)&PushToStack(SaveScreen) // Push it after fetching saves so that element is highlighted correctly!
+button Options
+button TestBattle
+text "Practice battle"
+button Help
+
+button Exit
+onActivate	GO_TO_MAIN_MENU
+
+
+
+
+

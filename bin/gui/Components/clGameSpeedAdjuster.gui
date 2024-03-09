@@ -1,0 +1,54 @@
+
+DependsOn Colors
+DependsOn Textures
+DependsOn Sizes
+
+root ColumnList
+name GameSpeedAdjuster
+padding 0.02
+onEnterScope GameSpeedAdjusterDisplayed
+
+parent GameSpeedAdjuster
+
+defaultSizeRatioXY 0.3 1
+defaultTextColor $TextColorLabel
+
+defaultTextSize $TextSizeSmall
+
+Image IconGameSpeed
+texture img/icons/RecruitmentTime
+sizeRatioX 0.1
+retainAspectRatio true
+
+defaultTextAlignment Center
+
+IntegerLabel GameSpeed
+noLabel
+sizeRatioX 0.3
+onHover Tooltip.GameSpeed
+
+defaultTextColor $TextColorButton
+defaultSizeRatioX 0.12
+
+Button IncreaseSimulationSpeed
+text "+"
+texture img/ui/SmallButton
+retainAspectRatio true
+onHover Tooltip.IncreaseSpeed
+textureOnHover img/ui/SmallButton_Active
+
+Button DecreaseSimulationSpeed
+text "-"
+texture img/ui/SmallButton
+retainAspectRatio true
+onHover Tooltip.DecreaseSpeed
+textureOnHover img/ui/SmallButton_Active
+
+Button PauseGame
+text Pause
+sizeRatioX 0.25
+texture img/ui/Pause_Button
+retainAspectRatio true
+//3slice $3SliceButton
+onHover Tooltip.PauseGame
+textureOnHover img/ui/Pause_Button_Active

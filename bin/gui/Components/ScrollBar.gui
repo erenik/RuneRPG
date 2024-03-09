@@ -1,0 +1,14 @@
+
+
+DependsOn Colors
+DependsOn Textures
+
+
+defaultTextColor $TextColorButton
+
+root
+name ScrollBar
+texture img/ui/ScrollBg.png
+
+bottomBorder img/ui/ScrollBgBottom.png
+topBorder img/ui/ScrollBgTop.png

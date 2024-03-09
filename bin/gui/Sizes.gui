@@ -1,0 +1,10 @@
+
+
+Variable dividerHeight 0.02
+
+Variable FancyFont data/fonts/Alice-in-Wonderland.ttf
+Variable LegiFont data/fonts/Roboto-Regular.ttf
+Variable SChineseFont data/fonts/NotoSansSC-Regular.ttf
+Variable JapaneseFont data/fonts/NotoSansJP-Regular.ttf
+
+DependsOn Sizes_$os

@@ -4,6 +4,8 @@
 #include "MapState.h"
 
 #include "Actions.h"
+#include "Input/Action.h"
+#include "Input/Binding.h"
 
 // Creates bindings that are used for debugging purposes only
 void MapState::CreateDefaultBindings(){
@@ -11,7 +13,7 @@ void MapState::CreateDefaultBindings(){
 //
 ///// (int action, int * inputCombinationArray, int inputs, const char * name = NULL);
 //	/// Get pointer to this mapping
-//	InputMapping * mapping = &this->inputMapping;
+	InputMapping * mapping = &this->inputMapping;
 //	/// Create default bindings
 //
 //
@@ -27,17 +29,15 @@ void MapState::CreateDefaultBindings(){
 //	mapping->CreateBinding(PAUSE_SIMULATIONS, KEY::PAUSE_BREAK, "PAUSE_BREAK : Pause simulations");
 //
 //
-//	/// First input mapping
-//	mapping->CreateBinding(BEGIN_WALK_LEFT, KEY::A, "A : Walk left")->stopAction = STOP_WALK_LEFT;
-//	mapping->CreateBinding(BEGIN_WALK_RIGHT, KEY::D, "D : Walk Right")->stopAction = STOP_WALK_RIGHT;
-//	mapping->CreateBinding(BEGIN_WALK_UP, KEY::W, "W : Walk Up")->stopAction = STOP_WALK_UP;
-//	mapping->CreateBinding(BEGIN_WALK_DOWN, KEY::S, "S : Walk Down")->stopAction = STOP_WALK_DOWN;
-//
-//	mapping->CreateBinding(BEGIN_WALK_LEFT, KEY::LEFT, "A : Walk left")->stopAction = STOP_WALK_LEFT;
-//	mapping->CreateBinding(BEGIN_WALK_RIGHT, KEY::RIGHT, "D : Walk Right")->stopAction = STOP_WALK_RIGHT;
-//	mapping->CreateBinding(BEGIN_WALK_UP, KEY::UP, "W : Walk Up")->stopAction = STOP_WALK_UP;
-//	mapping->CreateBinding(BEGIN_WALK_DOWN, KEY::DOWN, "S : Walk Down")->stopAction = STOP_WALK_DOWN;
-//
+
+	// First input mapping
+	mapping->bindings.AddItem(new Binding(Action::CreateStartStopAction("WalkLeft"), KEY::A));
+	mapping->bindings.AddItem(new Binding(Action::CreateStartStopAction("WalkRight"), KEY::D));
+	mapping->bindings.AddItem(new Binding(Action::CreateStartStopAction("WalkUp"), KEY::W));
+	mapping->bindings.AddItem(new Binding(Action::CreateStartStopAction("WalkDown"), KEY::S));
+	mapping->bindings.AddItem(new Binding(new Action("Attack"), KEY::SPACE));
+	mapping->bindings.AddItem(new Binding(new Action("Block"), KEY::B));
+
 //	/// Schwee ^w^
 //	mapping->CreateBinding(INTERACT, KEY::ENTER);
 //	mapping->CreateBinding(INTERACT, KEY::E);

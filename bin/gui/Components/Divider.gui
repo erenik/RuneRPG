@@ -1,0 +1,8 @@
+
+DependsOn Textures
+DependsOn Sizes
+
+root Element
+name divider
+3slice $3SliceDivider
+sizeRatioY $dividerHeight

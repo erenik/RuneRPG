@@ -1,0 +1,31 @@
+/// Main menu for the editor-state.
+
+root
+name	MainMenu
+exitable	true
+
+defaultTextColor	1 1 1 1
+defaultTexture	80Gray50Alpha.png
+
+// Base menu for returning to main menu, saving, loading, etc.
+list lMainMenu
+onExit		NavigateUI(false);
+AddTo	root
+
+// Base menu for returning to main menu, saving, loading, etc.
+defaultParent		lMainMenu
+defaultSizeRatioX	1
+defaultSizeRatioY	0.1
+
+button	New
+text	"New map"
+onActivate	Query(NewMap)
+button	Save
+text	"Save map..."
+onActivate OpenFileBrowser("Save map",SaveMap,".tmap") // LoadMaps(SavesList)&PushToStack(SaveScreen)
+button	Load
+text	"Load map..."
+onActivate OpenFileBrowser("Load map",LoadMap,".tmap") // LoadMaps(SavesList)&Query(OpenLoadScreen)
+button	GoToMainMenu
+text	"Go to Main Menu"
+onActivate	PopUI(MainMenu)&GO_TO_MAIN_MENU

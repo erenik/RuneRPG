@@ -1,0 +1,15 @@
+
+// old label color before style switch: 0x631c13ff
+Variable TextColorLabel 0xeef0ffff
+Variable TextColorLabelDark 0x111111ff
+Variable TextColorButton 0x222222ff
+Variable SeparatorColor 0xeeeeeeff
+Variable TextColorBright 0xaaaaaaff
+Variable TextColorBrightC 0xccccccff
+Variable TextColorButtonBright 0xffeeccff
+
+Variable TextColorAfford 0x222222ff
+Variable TextColorCannotAfford 0xa48d8aff
+
+// New suggested color, too dark: 0x430C04ff
+

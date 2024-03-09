@@ -1,0 +1,37 @@
+// So Windows
+Variable MainContentMaxWidth 1800
+Variable MainContentMaxWidth2 1600
+Variable LogoMaxWidth 900
+Variable MainMenuMaxWidth 400
+Variable VersionMaxWidth 150
+
+Variable TextSizeHeaderLarge 80
+Variable TextSizeHeader 60
+Variable TextSizeHeader2 44
+Variable TextSizeHeader3 30
+Variable TextSizeButton 24
+Variable TextSizeContent 20
+Variable TextSizeSmall 16
+Variable TextSizeSmaller 12
+
+// Hud
+Variable HudLeftMaxWidth 400
+Variable HudSettlementsMaxWidth 600
+Variable CursorDetailsMaxWidth 350
+Variable TopBarMaxWidth 800
+Variable ObjectivesMaxWidth 600
+Variable SettlementDetailsMaxWidth 480
+Variable MineralIconMaxWidth 200
+
+// Settlement details
+Variable SDCenterSectionMaxWidth 1000
+Variable NationDetailsMaxWidth 400
+
+// New X
+Variable NewImprovementLeftMaxWidth 500
+Variable NewImprovementRightMaxWidth 800
+Variable NewUnitCenterMaxWidth 1500
+
+// Lobby
+Variable lLeftWidth 1200
+

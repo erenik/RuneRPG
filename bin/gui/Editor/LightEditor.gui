@@ -1,0 +1,26 @@
+
+root
+name	LightEditor
+
+defaultTextColor	1 1 1 1
+defaultTexture		80Gray50Alpha.png
+
+parent	LightEditor
+
+list	ContentsObjects
+sizeRatioXY	0.35	0.7
+alignmentXY	0.825 	0.58
+
+defaultParent	ContentsObjects
+defaultSizeRatioXY	1 0.1
+
+StringInput	LightName
+text	"Name"
+
+VectorInput	3 LightColor
+text	"Color"
+
+VectorInput	3 LightAttenuation
+text	"Attenuation"
+
+

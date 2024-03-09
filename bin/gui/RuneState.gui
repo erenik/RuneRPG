@@ -1,0 +1,139 @@
+// Emil Hedemalm
+// 2013-12-13
+// Menu UI for the Rune- and Rune-template combination screen/state.
+
+// Set default values, these may be omitted and/or reset 
+// at any point later if wanted. See below for their usage.
+defaultAlignment 	NULL_ALIGNMENT
+defaultTexture		/80gray50Alpha.png	
+defaultParent		root			
+defaultScalability	true
+// The following will catenate the RuneRPG folder before the actual texture paths are used..! ^^
+defaultRootFolder	RuneRPG
+defaultTextColor	1 1 1 1
+
+root
+
+/// =============================
+list RuneScreen
+padding	0.005
+visible false
+closable	true
+onExit	GoToPreviousGameState()
+texture		NULL
+AddTo	root
+
+label	RunesLabel
+sizeRatioY	0.1
+text	"Rune-combination"
+AddTo	RuneScreen
+
+element Content
+sizeRatioY	0.89
+texture		NULL
+AddTo	RuneScreen
+
+list	RuneMenu
+//text	"RuneMenu"
+texture		NULL
+AddTo	Content
+
+columnList	MenuColumns
+//text		"Menu Columns"
+texture		NULL
+AddTo 	RuneMenu
+
+list RuneButtons
+sizeRatioX	0.2
+AddTo	MenuColumns
+
+element SecondList
+sizeRatioX	0.8
+texture	NULL
+AddTo	MenuColumns
+
+defaultParent		RuneButtons
+defaultSizeRatioY	0.1
+defaultSizeRatioX	1
+
+button	ExistingTemplates
+text	"Existing templates"
+onActivate	LoadRuneTemplates(Templates)&PushToStack(Templates)
+
+button	NewTemplate
+text	"New template"
+onActivate	PushToStack(NewTemplateScreen)
+
+button	UnlockedSpells
+text	"Unlocked Spells"
+onActivate	PushToStack(Spells)
+
+/// =============================
+list NewTemplateScreen
+sizeRatioXY	1 1
+visible	false
+onExit	wooo
+AddTo	SecondList
+
+defaultParent 		NewTemplateScreen
+defaultSizeRatioY	0.1
+
+label	NTSLabel
+sizeRatioY	0.1
+text	"New Template"
+
+// Name of it
+columnList labelRow
+sizeRatioY	0.1
+
+label	TemplateNameLabel
+text	"Template name: "
+sizeRatioXY	0.5	1
+AddTo	labelRow
+label	TemplateName
+text	"0P"
+sizeRatioXY	0.5	1
+AddTo	labelRow
+
+list RuneTypes
+sizeRatioY	0.9
+AddTo	NewTemplateScreen
+
+defaultParent	RuneTypes
+
+button	AddMajor
+text	"Add Primary"
+button	AddMinor
+text	"Add Secondary"
+
+button	RemoveMajor
+text	"Remove Primary"
+button	RemoveMinor
+text	"Remove Secondary"
+
+button	Done
+onActivate	CreateTemplate(TemplateName) // Should get a pop-up upon failure or something maybe?
+
+
+/// =============================
+list Templates
+sizeRatioXY	1 1
+visible	false
+texture		NULL
+AddTo SecondList
+
+defaultParent	Templates
+button		1P
+button		2P1S
+
+/// =============================
+list Spells
+sizeRatioXY	1 1
+visible	false
+texture		NULL
+AddTo SecondList
+
+defaultParent	Spells
+button		Fire
+button		Water
+AddTo	Spells

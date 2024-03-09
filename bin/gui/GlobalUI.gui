@@ -1,0 +1,56 @@
+// Global UI for the RuneRPG project
+	
+// Set default values, these may be omitted and/or reset 
+// at any point later if wanted. See below for their usage.
+defaultAlignment 	NULL_ALIGNMENT
+defaultParent		root			
+defaultScalability	true
+// The following will catenate the RuneRPG folder before the actual texture paths are used..! ^^
+defaultRootFolder	MainMenu
+defaultTexture		black50Alpha.png
+defaultTextColor	1 1 1 1
+defaultTextSizeRatio	0.5
+
+root							// Makes root active for manipulation, 
+
+// Make root parent.
+parent	root
+
+/// Cutscene-UI
+element overlayFadeBackground1
+texture	NULL
+element overlayFadeBackground2
+texture	NULL
+
+// text	"Overlay fade background o.o"
+
+// Size of the ui for the fade-backgrounds.
+defaultSizeRatioXY	1.0 0.5
+
+Image	overlayFadeUI1
+texture	NULL
+// text	"Overlay Fade ui 1"
+Image 	overlayFadeUI2
+texture	NULL
+
+Label	overlayTextUI
+text	""
+texture	NULL
+sizeRatioXY	0.8	0.2
+alignmentXY 0.5	0.1
+
+
+/// .. something more?
+/// ..Pause UI! o.o
+List	CutsceneMenu
+onExit	Continue
+visible false
+
+parent	CutsceneMenu
+button	Continue
+button	SkipCutscene
+
+
+
+
+

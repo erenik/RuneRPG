@@ -1,0 +1,82 @@
+/// Lobby gui! 
+
+root
+name	Lobby
+
+// Disable Esc to back away easily from the lobby.
+exitable false
+
+defaultTextColor	1 1 1 1
+defaultTexture		black50Alpha.png
+defaultSizeRatioXY	1 1
+defaultAlignmentXY	0.5 0.5
+
+parent	Lobby
+
+
+// Cover all underlying ui
+List LobbyScreen
+text	"LobbyScreen"
+texture	Black
+TextColor	1 1 1 0.1
+
+
+parent	LobbyScreen
+defaultSizeRatioY	0.1
+
+ColumnList	cTopBar
+ColumnList	PlayersAndChat
+sizeRatioXY	1	0.79
+ColumnList	ReadyAndStart
+
+parent	PlayersAndChat
+defaultSizeRatioXY	0.5 1
+
+List	Left
+text	"Left"
+TextColor	1 1 1 0.1
+List  	Right
+text	"Right"
+TextColor	1 1 1 0.1
+
+/// Top bar
+parent	cTopBar
+
+defaultSizeRatioXY	0.5 1
+label	lobbyLabel
+text	"Lobby"
+
+label	GameName
+
+/// Fill with contents
+parent Left
+defaultSizeRatioXY	1 0.1
+
+label	GameTypeString
+label	lPList
+text	"Players"
+List	PlayerList
+sizeRatioY	0.6
+text	"PlayerList"
+TextColor	1 1 1 0.1
+
+parent	Right
+
+label	lChatLog
+text	"Chat"
+List	ChatLog
+sizeRatioY	0.79
+Input	ChatInput
+
+
+// Bottom buttons
+parent	ReadyAndStart
+defaultSizeRatioXY	0.25 1
+button	Disconnect
+onActivate	CancelGame
+button	Options
+button	Ready
+button	StartButton
+text	"Start game"
+disabled
+

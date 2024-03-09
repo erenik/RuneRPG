@@ -1,0 +1,42 @@
+
+root
+name	BrushEditorWindow
+
+defaultTextColor	1 1 1 1
+defaultTexture		80Gray50Alpha.png
+
+parent	BrushEditorWindow
+
+// List covering entire window/area
+list BrushEditor
+
+parent	BrushEditor
+
+defaultSizeRatioY 0.1
+
+label	Brushes
+text	"Brush type"
+list TileBrushes
+sizeRatioY	0.3
+alignmentX	0.5
+sizeRatioX	0.8
+
+columnList	SizeElement
+
+defaultParent	TileBrushes
+defaultSizeRatioY	0.3
+
+checkBox 	SquareBrush
+checkBox 	CircleBrush
+checkBox	DragRect
+
+AddTo	TileBrushes
+
+// Add the contents to the brush size SizeElement
+defaultSizeRatioXY	0.5	1.0
+label	BrushSize:
+AddTo SizeElement 
+input	SetBrushSize
+onTrigger	SetBrushSize(this)
+text	"1"
+AddTo SizeElement

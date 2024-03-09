@@ -1,0 +1,36 @@
+// So retina
+Variable MainContentMaxWidth 3600
+Variable MainContentMaxWidth2 3200
+Variable LogoMaxWidth 1800
+Variable MainMenuMaxWidth 800
+Variable VersionMaxWidth 300
+
+Variable TextSizeHeaderLarge 160
+Variable TextSizeHeader 120
+Variable TextSizeHeader2 88
+Variable TextSizeHeader3 60
+Variable TextSizeButton 48
+Variable TextSizeContent 40
+Variable TextSizeSmall 32
+Variable TextSizeSmaller 24
+
+// Hud
+Variable HudLeftMaxWidth 800
+Variable HudSettlementsMaxWidth 1200
+Variable CursorDetailsMaxWidth 700
+Variable TopBarMaxWidth 1600
+Variable ObjectivesMaxWidth 1200
+Variable SettlementDetailsMaxWidth 960
+Variable MineralIconMaxWidth 400
+
+// Settlement details
+Variable SDCenterSectionMaxWidth 2000
+Variable NationDetailsMaxWidth 800
+
+// New X
+Variable NewImprovementLeftMaxWidth 1000
+Variable NewImprovementRightMaxWidth 1600
+Variable NewUnitCenterMaxWidth 3000
+
+// Lobby
+Variable lLeftWidth 2400

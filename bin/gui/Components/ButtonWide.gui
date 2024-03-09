@@ -1,0 +1,6 @@
+
+root Button
+texture img/ui/ButtonWide
+textAlignment Center
+textSize 0.7
+sizeRatioX 0.3

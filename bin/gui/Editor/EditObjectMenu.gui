@@ -1,0 +1,42 @@
+/// Wowow
+
+
+root
+name	EditObjectMenu
+
+defaultTextColor	1 1 1 1
+defaultTexture		80Gray50Alpha.png
+
+columnList	clEditObject
+AddTo	root
+
+parent	clEditObject
+list	lEditObjectParams
+sizeRatioX	1
+list	lEditObjectInteract
+sizeRatioX	0.1
+
+
+parent	lEditObjectParams
+defaultSizeRatioY	0.1	
+
+label		"Edit object"
+StringInput	ObjectName
+text	"Name: "
+
+textureInput	ObjectPrimaryTexture
+text	"Primary texture: "
+
+VectorInput 2	ObjectSizeXY
+// VectorInput	2	CenterPivotXY
+
+Matrix	ObjectOccupationMatrix
+sizeRatioY	0.3
+
+button		Delete
+button		SaveObjects
+text	"Save to file"	
+
+
+
+parent	lEditObjectInteract

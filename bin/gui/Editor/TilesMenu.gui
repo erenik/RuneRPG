@@ -1,0 +1,20 @@
+/// Tile menu!
+
+root
+name	TilesMenu
+exitable	true
+
+defaultTextColor	1 1 1 1
+defaultTexture	80Gray50Alpha.png
+
+parent TilesMenu
+
+list TileSelector
+
+parent TileSelector
+
+defaultSizeRatioXY	1 0.2
+
+label		"Tile types"
+list 		TileTypes
+sizeRatioY 	0.7

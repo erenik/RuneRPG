@@ -1,0 +1,75 @@
+/// Emil Hedemalm
+/// 2014-04-10
+/// Standard Shop
+
+// Set default values, these may be omitted and/or reset 
+// at any point later if wanted. See below for their usage.
+defaultAlignment 	NULL_ALIGNMENT
+defaultTexture		80gray50Alpha.png	
+defaultParent		root			
+defaultScalability	true
+defaultTextColor	1 1 1 1
+
+root							// Makes root active for manipulation, 
+texture	Black
+name Shop
+
+parent	Shop
+
+// Main list for the ui of filters above and content below.
+list mainList
+
+parent mainList
+
+columnList clFilters
+sizeRatioXY	1 	0.1
+alignmentXY 0.5 0.95
+textColor 1 1 1 0.1
+text	"Filters"
+
+
+columnList content
+sizeRatioY 0.9
+textColor 1 1 1 0.02
+text	"Content"
+
+//////////////////////////////// CONTENT
+parent content
+
+list	ShopItemList
+textColor 1 1 1 0.02
+text	"ItemList"
+sizeRatioX	0.7 
+
+list Right
+textColor 1 1 1 0.1
+text	"Right"
+sizeRatioX	0.3
+
+
+///////////////////////////////// FILL the CONTENT
+////////////////////////////////// RIGHT content
+parent Right
+
+defaultSizeRatioY 0.5
+
+list MiscWindow
+text	"Misc"
+list PurchaseWindow
+
+parent	PurchaseWindow
+defaultSizeRatioY 0.2
+label	"Purchase"
+label	ItemToBuy
+FloatInput	QuantityToBuy
+text	"Quantity"
+label	Sum
+button	ConfirmPurchase
+text	"Confirm"
+
+///////////////////////////////////// LEFT content
+defaultParent	ItemList
+defaultSizeRatioXY	1 0.1
+
+button	Potion
+

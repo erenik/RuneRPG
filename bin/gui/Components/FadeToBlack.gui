@@ -1,0 +1,7 @@
+
+root Element
+name FadeToBlack
+texture 0x000000ff
+// Requires a specific GMPopUI with specific name to remove!
+explicitPoppingOnly
+

@@ -1,0 +1,209 @@
+// UI creation & parsing guide, By Emil Hedemalm 2013-03-28
+// ============================
+// <-- This is a comment
+
+/* <-- This marks the beginning of a long comment...	
+	...and this marks the end of a long comment --> */
+	
+// Set default values, these may be omitted and/or reset 
+// at any point later if wanted. See below for their usage.
+defaultAlignment 	NULL_ALIGNMENT
+defaultParent		root			
+defaultScalability	true
+// The following will catenate the RuneRPG folder before the actual texture paths are used..! ^^
+defaultRootFolder	MainMenu
+defaultTexture		black50Alpha.png
+defaultTextColor	1 1 1 1
+defaultTextSizeRatio	0.5
+
+root							// Makes root active for manipulation, 
+
+element		MainMenu
+texture 	mainmenu_bg.png		// like making it cover the whole screen with a texture
+sizeRatio	1.0
+visible		true
+exitable	false
+AddTo	root
+
+
+/// Group for main menu buttons
+list 	mainMenuButtons
+texture		NULL
+alignmentX	0.2
+alignmentY	0.5
+sizeRatioXY	0.3	0.8
+AddTo	MainMenu
+
+// To display eventual errors.
+label	NetworkLog
+alignmentXY	0.5 0.06
+sizeRatioXY	0.5	0.1
+AddTo MainMenu
+
+parent	mainMenuButtons
+defaultSizeRatioY	0.12
+
+button 		NewGameButton 		
+text		"New Game"
+onActivate	NEW_GAME
+AddTo mainMenuButtons
+
+button 		LoadGameButton
+text		"Load Game"
+onActivate	PushToStack(LoadGame)&LoadSavesList(LoadGameList)
+
+button 		OptionsButton 		
+text		"Options"
+onActivate	setVisibility(Options,true)&setVisibility(MainMenu,false)
+
+button		MultiplayerButton
+text		"Multiplayer"
+onActivate	PushUI(gui/MainMenu/MultiplayerMenu.gui)&&LoadMultiplayerDefaults
+
+button 		CreditsButton 		
+text		"Credits"
+onActivate	SetVisibility(CreditsScreen,true)&SetVisibility(MainMenu,false)
+
+button 		ExitButton 		
+text		"Exit"
+onActivate	EXIT						// enumeration
+
+
+button 		EditorButton 		
+text		"Editor"
+onActivate	GO_TO_EDITOR
+downElement	NewGameButton
+
+button 		BattleTest 		
+onActivate	GoToTestBattle
+text		"Test Battle"
+
+// ////////////////////////////////////////////
+// Credits!
+// ////////////////////////////////////////////
+element 	CreditsScreen
+texture		mainmenu_bg.png
+sizeRatio	1.0
+visible 	false
+AddTo root
+
+element 	CreditsPic1
+texture		Credits/AwesomeCreditsPicture1.png
+alignmentX	0.5
+alignmentY	0.75
+sizeRatioX	0.5
+sizeRatioY	0.25
+AddTo	CreditsScreen
+
+button		CreditsBackButton
+onActivate	SetVisibility(CreditsScreen,false)&SetVisibility(MainMenu,true)
+alignmentX	0.5
+alignmentY	0.2
+sizeRatioX	0.2
+sizeRatioY	0.1
+texture		MainMenu/BackButton.png
+AddTo CreditsScreen
+
+
+// ////////////////////////////////////////////
+// Options!
+// ////////////////////////////////////////////
+element		Options
+texture		mainmenu_bg.png
+visible		false
+sizeRatio 	1.0
+AddTo root
+/*
+button 		OptionsInputButton 		
+onActivate	SetVisibility(Options,false)&SetVisibility(Input,true)
+texture		options/Input.png	// image source in img/ dir
+scalable	true 	
+origin		TOP_LEFT					
+alignmentX	0.5		// places it in the middle x-wise
+alignmentY	0.8		// places it near the top
+sizeRatioX	0.2	// Size ratios compared to parent(!)
+sizeRatioY	0.1		// Size ratio compared to parent(!)
+AddTo Options
+*/
+button 		OptionsBackButton 		
+onActivate	SetVisibility(Options,false)&SetVisibility(MainMenu,true)
+texture		MainMenu/BackButton.png
+scalable	true 	
+origin		TOP_LEFT					
+alignmentX	0.5		// places it in the middle x-wise
+alignmentY	0.1		// places it near the top
+sizeRatioX	0.2	// Size ratios compared to parent(!)
+sizeRatioY	0.1		// Size ratio compared to parent(!)
+AddTo Options	
+
+element		Input
+texture		mainmenu_bg.png
+visible		false
+sizeRatio 	1.0
+AddTo root
+
+button 		InputBackButton 		
+onActivate	SetVisibility(Input,false)&SetVisibility(Options,true)
+texture		MainMenu/BackButton.png
+scalable	true 	
+origin		TOP_LEFT					
+alignmentX	0.5		// places it in the middle x-wise
+alignmentY	0.1		// places it near the top
+sizeRatioX	0.2	// Size ratios compared to parent(!)
+sizeRatioY	0.1		// Size ratio compared to parent(!)
+AddTo Input	
+
+button		ActivePlayer
+onActivate	ToggleActivePlayer
+text		"Player 1"
+textColor	1.0f 1.0f 1.0f 1.0f
+textSize	0.5f
+texture		80gray.png	// image source in img/ dir
+scalable	true 	
+origin		TOP_LEFT					
+alignmentX	0.3		// places it in the middle x-wise
+alignmentY	0.5		// places it near the top
+sizeRatioX	0.2	// Size ratios compared to parent(!)
+sizeRatioY	0.1		// Size ratio compared to parent(!)
+AddTo Input		
+
+button 		ActivePlayerInput
+onActivate	ToggleActivePlayerInput
+text		"Keyboard 1"
+textColor	1.0f 1.0f 1.0f 1.0f
+textSize	0.5f
+texture		80gray.png	// image source in img/ dir
+scalable	true 	
+origin		TOP_LEFT					
+alignmentX	0.7		// places it in the middle x-wise
+alignmentY	0.5		// places it near the top
+sizeRatioX	0.2	// Size ratios compared to parent(!)
+sizeRatioY	0.1		// Size ratio compared to parent(!)
+AddTo Input
+
+///////////////////////////////////////////////////////////
+// Load game
+list 	LoadGame
+padding 0.005
+visible	false
+AddTo 	root
+
+defaultParent LoadGame
+
+label	
+text	"Load Game"	
+sizeRatioY	0.1
+
+list 	LoadGameList
+sizeRatioY	0.7
+
+button 		Cancel
+sizeRatioY	0.1
+onActivate	PopFromStack(LoadGame)
+
+AddTo	LoadGame
+
+
+
+
+

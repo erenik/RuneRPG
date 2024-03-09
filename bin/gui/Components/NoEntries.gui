@@ -1,0 +1,9 @@
+
+DependsOn Colors
+
+root Label
+name NoEntries
+text NoEntries
+textAlignment Center
+textColor $TextColorLabel
+sizeRatioY 0.1

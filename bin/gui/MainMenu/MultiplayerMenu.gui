@@ -1,0 +1,29 @@
+
+root
+name	MultiplayerMenu
+
+defaultTextColor	1 1 1 1
+defaultTexture		black50Alpha.png
+
+parent	MultiplayerMenu
+
+
+
+list	MultiplayerList
+sizeRatioXY 0.5 0.7
+alignmentXY	0.7 0.5
+TextColor	1 1 1 0.1
+
+parent	MultiplayerList
+defaultSizeRatioY	0.1
+
+label	"Multiplayer"
+sizeRatioY	0.15
+
+StringInput		"IP"
+IntegerInput	"Port"
+button	"Host game"
+
+button	"Join game"
+
+

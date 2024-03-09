@@ -1,0 +1,15 @@
+
+
+DependsOn Colors
+DependsOn Textures
+
+
+defaultTextColor $TextColorButton
+
+root
+name ScrollBarHandle
+texture img/ui/ScrollVertical
+
+topBorder img/ui/ScrollTop.png
+bottomBorder img/ui/ScrollBottom
+

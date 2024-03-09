@@ -1,0 +1,47 @@
+
+DependsOn Colors
+DependsOn Sizes
+
+root ColumnList
+name YearDaySeason
+padding 0.02
+// texture 0xffffff44
+
+parent YearDaySeason
+
+defaultSizeRatioY 1
+defaultTextColor $TextColorLabel
+defaultTextSize $TextSizeSmall
+defaultTextAlignment CenterLeft
+
+IntegerLabel Year
+text "Year"
+dividerX 0.6
+sizeRatioX 0.35
+onHover Tooltip.Year
+
+IntegerLabel Day
+text "Day"
+dividerX 0.6
+sizeRatioX 0.35
+onHover Tooltip.Day
+
+/*
+    StringLabel Season
+    textAlignment Left
+    text ""
+    dividerX 0
+    value "Summer"
+    sizeRatioX 0.2
+    onHover Tooltip.Season
+*/
+
+ELement padding
+sizeRatioX 0.1
+
+Image SeasonIcon
+texture img/icons/Summer
+sizeRatioX 0.1
+retainAspectRatio true
+onHover Tooltip.Season
+

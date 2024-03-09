@@ -1,0 +1,24 @@
+
+root
+name	ObjectsMenu
+
+defaultTextColor	1 1 1 1
+defaultTexture		80Gray50Alpha.png
+
+parent	ObjectsMenu
+list	ContentsObjects
+
+defaultParent	ContentsObjects
+defaultSizeRatioXY	1 0.1
+
+button		"New Object"
+onActivate	NewObject
+StringInput	Search
+text		"Filter: "
+
+label	"Object types"
+list 		ObjectTypes
+sizeRatioY 	0.68
+text 		"Object types list"
+textColor	1 1 1 0.1
+
